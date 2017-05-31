@@ -8270,6 +8270,35 @@ var BEM = function () {
                 });
             });
         }
+
+        /**
+         * Check if the first element of the
+         * currently selected elements has one or
+         * more modifiers
+         *
+         * @param {...String} modifier
+         * @return {Boolean}
+         * @api public
+         */
+
+    }, {
+        key: 'is',
+        value: function is() {
+            var _this6 = this;
+
+            var el = this.elements[0];
+
+            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+                modifiers[_key4] = arguments[_key4];
+            }
+
+            return modifiers.reduce(function (is, modifier) {
+                if (!is) {
+                    return is;
+                }
+                return el.classList.contains(_this6.name + modifierSeparator + modifier);
+            }, true);
+        }
     }]);
 
     return BEM;
@@ -8407,6 +8436,26 @@ describe('bem', function () {
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--baz');
+    });
+
+    it('should be able to determine if an element has one or more modifiers', function () {
+        var widget = (0, _bem2.default)('.widget');
+        var header = widget.element('header');
+
+        (0, _chai.expect)(widget.is('foo')).to.equal(false);
+        (0, _chai.expect)(header.is('bar', 'baz')).to.equal(false);
+
+        widget.modify('foo');
+        header.modify('bar', 'baz');
+
+        (0, _chai.expect)(widget.is('foo')).to.equal(true);
+        (0, _chai.expect)(header.is('bar', 'baz')).to.equal(true);
+
+        header.unmodify('baz');
+
+        (0, _chai.expect)(header.is('bar', 'baz')).to.equal(false);
+        (0, _chai.expect)(header.is('baz')).to.equal(false);
+        (0, _chai.expect)(header.is('bar')).to.equal(true);
     });
 });
 

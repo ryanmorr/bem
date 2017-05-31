@@ -116,4 +116,24 @@ describe('bem', () => {
         expect(widget.elements[0].className).to.equal('widget');
         expect(header.elements[0].className).to.equal('widget__header widget__header--baz');
     });
+
+    it('should be able to determine if an element has one or more modifiers', () => {
+        const widget = bem('.widget');
+        const header = widget.element('header');
+
+        expect(widget.is('foo')).to.equal(false);
+        expect(header.is('bar', 'baz')).to.equal(false);
+
+        widget.modify('foo');
+        header.modify('bar', 'baz');
+
+        expect(widget.is('foo')).to.equal(true);
+        expect(header.is('bar', 'baz')).to.equal(true);
+
+        header.unmodify('baz');
+
+        expect(header.is('bar', 'baz')).to.equal(false);
+        expect(header.is('baz')).to.equal(false);
+        expect(header.is('bar')).to.equal(true);
+    });
 });

@@ -148,6 +148,25 @@ class BEM {
             });
         });
     }
+
+    /**
+     * Check if the first element of the
+     * currently selected elements has one or
+     * more modifiers
+     *
+     * @param {...String} modifier
+     * @return {Boolean}
+     * @api public
+     */
+    is(...modifiers) {
+        const el = this.elements[0];
+        return modifiers.reduce((is, modifier) => {
+            if (!is) {
+                return is;
+            }
+            return el.classList.contains(this.name + modifierSeparator + modifier);
+        }, true);
+    }
 }
 
 /**
