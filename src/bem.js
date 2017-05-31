@@ -108,44 +108,44 @@ class BEM {
     }
 
     /**
-     * Add a modifier class to the currently
-     * selected elements
+     * Add one or more modifiers to the
+     * currently selected elements
      *
-     * @param {String} modifier
+     * @param {...String} modifier
      * @return {BEM}
      * @api public
      */
-    modify(modifier) {
-        return this.elements.forEach((el) => {
-            el.classList.add(this.name + modifierSeparator + modifier);
-        });
+    modify(...modifiers) {
+        const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
+        return this.elements.forEach((el) => el.classList.add(...classes));
     }
 
     /**
-     * Remove a modifier class to the currently
-     * selected elements
+     * Remove one or more modifiers from the
+     * currently selected elements
      *
-     * @param {String} modifier
+     * @param {...String} modifier
      * @return {BEM}
      * @api public
      */
-    unmodify(modifier) {
-        return this.elements.forEach((el) => {
-            el.classList.remove(this.name + modifierSeparator + modifier);
-        });
+    unmodify(...modifiers) {
+        const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
+        return this.elements.forEach((el) => el.classList.remove(...classes));
     }
 
     /**
-     * Toggle adding/removing a modifier class to
-     * the currently selected elements
+     * Toggle adding/removing one or more modifiers
+     * to the currently selected elements
      *
-     * @param {String} modifier
+     * @param {...String} modifier
      * @return {BEM}
      * @api public
      */
-    toggle(modifier) {
+    toggle(...modifiers) {
         return this.elements.forEach((el) => {
-            el.classList.toggle(this.name + modifierSeparator + modifier);
+            modifiers.forEach((mod) => {
+                el.classList.toggle(this.name + modifierSeparator + mod);
+            });
         });
     }
 }

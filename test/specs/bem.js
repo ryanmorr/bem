@@ -75,45 +75,45 @@ describe('bem', () => {
         expect(header.elements[0].className).to.equal('widget__header');
     });
 
-    it('should be able to add a modifier to the currently selected elements', () => {
+    it('should be able to add one or more modifiers to the currently selected elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
         widget.modify('foo');
-        header.modify('bar');
+        header.modify('bar', 'baz');
 
         expect(widget.elements[0].className).to.equal('widget widget--foo');
-        expect(header.elements[0].className).to.equal('widget__header widget__header--bar');
+        expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
     });
 
-    it('should be able to remove a modifier from the currently selected elements', () => {
+    it('should be able to remove one or more modifiers from the currently selected elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
         widget.modify('foo');
-        header.modify('bar');
+        header.modify('bar', 'baz');
 
         widget.unmodify('foo');
-        header.unmodify('bar');
+        header.unmodify('bar', 'baz');
 
         expect(widget.elements[0].className).to.equal('widget');
         expect(header.elements[0].className).to.equal('widget__header');
     });
 
-    it('should be able to toggle adding/removing a modifier from the currently selected elements', () => {
+    it('should be able to toggle adding/removing one or more modifiers from the currently selected elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
         widget.toggle('foo');
-        header.toggle('bar');
+        header.toggle('bar', 'baz');
 
         expect(widget.elements[0].className).to.equal('widget widget--foo');
-        expect(header.elements[0].className).to.equal('widget__header widget__header--bar');
+        expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
 
         widget.toggle('foo');
         header.toggle('bar');
 
         expect(widget.elements[0].className).to.equal('widget');
-        expect(header.elements[0].className).to.equal('widget__header');
+        expect(header.elements[0].className).to.equal('widget__header widget__header--baz');
     });
 });
