@@ -8162,11 +8162,10 @@ var BEM = function () {
         value: function block(name) {
             var _this = this;
 
-            var elements = this.elements.reduce(function (els, el) {
+            return bem(this.elements.reduce(function (els, el) {
                 var selector = '.' + _this.name + ' .' + name;
                 return els.concat(toArray(el.querySelectorAll(selector)));
-            }, []);
-            return bem(elements);
+            }, []));
         }
 
         /**
@@ -8183,11 +8182,10 @@ var BEM = function () {
         value: function element(name) {
             var _this2 = this;
 
-            var elements = this.elements.reduce(function (els, el) {
+            return bem(this.elements.reduce(function (els, el) {
                 var selector = '.' + _this2.name + elementSeparator + name;
                 return els.concat(toArray(el.querySelectorAll(selector)));
-            }, []);
-            return bem(elements);
+            }, []));
         }
 
         /**
@@ -8279,6 +8277,7 @@ describe('bem', function () {
     it('should be able to get a BEM block by CSS selector', function () {
         var widget = (0, _bem2.default)('.widget');
 
+        (0, _chai.expect)(widget.elements).to.be.an('array');
         (0, _chai.expect)(widget.elements).to.have.lengthOf(1);
         (0, _chai.expect)(widget.elements[0].id).to.equal('widget-1');
     });
@@ -8286,6 +8285,7 @@ describe('bem', function () {
     it('should be able to get a BEM block by passing an element', function () {
         var widget = (0, _bem2.default)(document.querySelector('.widget'));
 
+        (0, _chai.expect)(widget.elements).to.be.an('array');
         (0, _chai.expect)(widget.elements).to.have.lengthOf(1);
         (0, _chai.expect)(widget.elements[0].id).to.equal('widget-1');
     });
@@ -8293,6 +8293,7 @@ describe('bem', function () {
     it('should be able to get a BEM block by passing an array/nodelist', function () {
         var widget = (0, _bem2.default)(document.querySelectorAll('.widget'));
 
+        (0, _chai.expect)(widget.elements).to.be.an('array');
         (0, _chai.expect)(widget.elements).to.have.lengthOf(1);
         (0, _chai.expect)(widget.elements[0].id).to.equal('widget-1');
     });
@@ -8307,6 +8308,7 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var tabs = widget.block('tabs');
 
+        (0, _chai.expect)(tabs.elements).to.be.an('array');
         (0, _chai.expect)(tabs.elements).to.have.lengthOf(1);
         (0, _chai.expect)(tabs.elements[0].id).to.equal('tabs-1');
     });
@@ -8315,6 +8317,7 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
+        (0, _chai.expect)(header.elements).to.be.an('array');
         (0, _chai.expect)(header.elements).to.have.lengthOf(1);
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
     });

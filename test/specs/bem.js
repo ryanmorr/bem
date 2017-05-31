@@ -30,6 +30,7 @@ describe('bem', () => {
     it('should be able to get a BEM block by CSS selector', () => {
         const widget = bem('.widget');
 
+        expect(widget.elements).to.be.an('array');
         expect(widget.elements).to.have.lengthOf(1);
         expect(widget.elements[0].id).to.equal('widget-1');
     });
@@ -37,6 +38,7 @@ describe('bem', () => {
     it('should be able to get a BEM block by passing an element', () => {
         const widget = bem(document.querySelector('.widget'));
 
+        expect(widget.elements).to.be.an('array');
         expect(widget.elements).to.have.lengthOf(1);
         expect(widget.elements[0].id).to.equal('widget-1');
     });
@@ -44,6 +46,7 @@ describe('bem', () => {
     it('should be able to get a BEM block by passing an array/nodelist', () => {
         const widget = bem(document.querySelectorAll('.widget'));
 
+        expect(widget.elements).to.be.an('array');
         expect(widget.elements).to.have.lengthOf(1);
         expect(widget.elements[0].id).to.equal('widget-1');
     });
@@ -58,6 +61,7 @@ describe('bem', () => {
         const widget = bem('.widget');
         const tabs = widget.block('tabs');
 
+        expect(tabs.elements).to.be.an('array');
         expect(tabs.elements).to.have.lengthOf(1);
         expect(tabs.elements[0].id).to.equal('tabs-1');
     });
@@ -66,6 +70,7 @@ describe('bem', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
+        expect(header.elements).to.be.an('array');
         expect(header.elements).to.have.lengthOf(1);
         expect(header.elements[0].className).to.equal('widget__header');
     });

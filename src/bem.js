@@ -86,11 +86,10 @@ class BEM {
      * @api public
      */
     block(name) {
-        const elements = this.elements.reduce((els, el) => {
+        return bem(this.elements.reduce((els, el) => {
             const selector = '.' + this.name + ' .' + name;
             return els.concat(toArray(el.querySelectorAll(selector)));
-        }, []);
-        return bem(elements);
+        }, []));
     }
 
     /**
@@ -102,11 +101,10 @@ class BEM {
      * @api public
      */
     element(name) {
-        const elements = this.elements.reduce((els, el) => {
+        return bem(this.elements.reduce((els, el) => {
             const selector = '.' + this.name + elementSeparator + name;
             return els.concat(toArray(el.querySelectorAll(selector)));
-        }, []);
-        return bem(elements);
+        }, []));
     }
 
     /**
