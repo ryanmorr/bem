@@ -21,6 +21,9 @@ describe('bem', () => {
                 <div class="widget__header"></div>
                 <div class="widget__body">
                     <div id="tabs-1" class="tabs"></div>
+                    <div class="widget__item"></div>
+                    <div class="widget__item"></div>
+                    <div class="widget__item"></div>
                 </div>
                 <div class="widget__footer"></div>
             </div>
@@ -73,6 +76,16 @@ describe('bem', () => {
         expect(header.elements).to.be.an('array');
         expect(header.elements).to.have.lengthOf(1);
         expect(header.elements[0].className).to.equal('widget__header');
+    });
+
+    it('should be able to iterate through the currently selected elements', () => {
+        const widget = bem('.widget');
+        const items = widget.element('item');
+        const expected = document.querySelectorAll('.widget__item');
+
+        items.each((el, i) => {
+            expect(el).to.equal(expected[i]);
+        });
     });
 
     it('should be able to add one or more modifiers to the currently selected elements', () => {

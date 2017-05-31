@@ -78,6 +78,19 @@ class BEM {
     }
 
     /**
+     * Invoke the passed function for each element
+     * in the collection
+     *
+     * @param {Function} fn
+     * @return {BEM}
+     * @api public
+     */
+    each(fn) {
+        this.elements.forEach(fn);
+        return this;
+    }
+
+    /**
      * Find BEM blocks that are decendants
      * of the currently selected elements
      *
@@ -117,8 +130,7 @@ class BEM {
      */
     modify(...modifiers) {
         const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
-        this.elements.forEach((el) => el.classList.add(...classes));
-        return this;
+        return this.each((el) => el.classList.add(...classes));
     }
 
     /**
@@ -131,8 +143,7 @@ class BEM {
      */
     unmodify(...modifiers) {
         const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
-        this.elements.forEach((el) => el.classList.remove(...classes));
-        return this;
+        return this.each((el) => el.classList.remove(...classes));
     }
 
     /**
@@ -144,12 +155,11 @@ class BEM {
      * @api public
      */
     toggle(...modifiers) {
-        this.elements.forEach((el) => {
+        return this.each((el) => {
             modifiers.forEach((mod) => {
                 el.classList.toggle(this.name + modifierSeparator + mod);
             });
         });
-        return this;
     }
 
     /**

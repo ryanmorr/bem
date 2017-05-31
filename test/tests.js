@@ -8150,16 +8150,32 @@ var BEM = function () {
     }
 
     /**
-     * Find BEM blocks that are decendants
-     * of the currently selected elements
+     * Invoke the passed function for each element
+     * in the collection
      *
-     * @param {String} name
+     * @param {Function} fn
      * @return {BEM}
      * @api public
      */
 
 
     _createClass(BEM, [{
+        key: 'each',
+        value: function each(fn) {
+            this.elements.forEach(fn);
+            return this;
+        }
+
+        /**
+         * Find BEM blocks that are decendants
+         * of the currently selected elements
+         *
+         * @param {String} name
+         * @return {BEM}
+         * @api public
+         */
+
+    }, {
         key: 'block',
         value: function block(name) {
             var _this = this;
@@ -8211,12 +8227,11 @@ var BEM = function () {
             var classes = modifiers.map(function (mod) {
                 return _this3.name + modifierSeparator + mod;
             });
-            this.elements.forEach(function (el) {
+            return this.each(function (el) {
                 var _el$classList;
 
                 return (_el$classList = el.classList).add.apply(_el$classList, _toConsumableArray(classes));
             });
-            return this;
         }
 
         /**
@@ -8240,12 +8255,11 @@ var BEM = function () {
             var classes = modifiers.map(function (mod) {
                 return _this4.name + modifierSeparator + mod;
             });
-            this.elements.forEach(function (el) {
+            return this.each(function (el) {
                 var _el$classList2;
 
                 return (_el$classList2 = el.classList).remove.apply(_el$classList2, _toConsumableArray(classes));
             });
-            return this;
         }
 
         /**
@@ -8266,12 +8280,11 @@ var BEM = function () {
                 modifiers[_key3] = arguments[_key3];
             }
 
-            this.elements.forEach(function (el) {
+            return this.each(function (el) {
                 modifiers.forEach(function (mod) {
                     el.classList.toggle(_this5.name + modifierSeparator + mod);
                 });
             });
-            return this;
         }
 
         /**
@@ -8348,7 +8361,7 @@ describe('bem', function () {
     });
 
     beforeEach(function () {
-        container.innerHTML = '\n            <div id="widget-1" class="widget">\n                <div class="widget__header"></div>\n                <div class="widget__body">\n                    <div id="tabs-1" class="tabs"></div>\n                </div>\n                <div class="widget__footer"></div>\n            </div>\n        ';
+        container.innerHTML = '\n            <div id="widget-1" class="widget">\n                <div class="widget__header"></div>\n                <div class="widget__body">\n                    <div id="tabs-1" class="tabs"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                </div>\n                <div class="widget__footer"></div>\n            </div>\n        ';
     });
 
     it('should be able to get a BEM block by CSS selector', function () {
@@ -8397,6 +8410,16 @@ describe('bem', function () {
         (0, _chai.expect)(header.elements).to.be.an('array');
         (0, _chai.expect)(header.elements).to.have.lengthOf(1);
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
+    });
+
+    it('should be able to iterate through the currently selected elements', function () {
+        var widget = (0, _bem2.default)('.widget');
+        var items = widget.element('item');
+        var expected = document.querySelectorAll('.widget__item');
+
+        items.each(function (el, i) {
+            (0, _chai.expect)(el).to.equal(expected[i]);
+        });
     });
 
     it('should be able to add one or more modifiers to the currently selected elements', function () {
