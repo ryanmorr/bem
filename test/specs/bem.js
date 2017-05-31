@@ -79,8 +79,8 @@ describe('bem', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
-        widget.modify('foo');
-        header.modify('bar', 'baz');
+        expect(widget.modify('foo')).to.equal(widget);
+        expect(header.modify('bar', 'baz')).to.equal(header);
 
         expect(widget.elements[0].className).to.equal('widget widget--foo');
         expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
@@ -93,8 +93,8 @@ describe('bem', () => {
         widget.modify('foo');
         header.modify('bar', 'baz');
 
-        widget.unmodify('foo');
-        header.unmodify('bar', 'baz');
+        expect(widget.unmodify('foo')).to.equal(widget);
+        expect(header.unmodify('bar', 'baz')).to.equal(header);
 
         expect(widget.elements[0].className).to.equal('widget');
         expect(header.elements[0].className).to.equal('widget__header');
@@ -104,8 +104,8 @@ describe('bem', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
-        widget.toggle('foo');
-        header.toggle('bar', 'baz');
+        expect(widget.toggle('foo')).to.equal(widget);
+        expect(header.toggle('bar', 'baz')).to.equal(header);
 
         expect(widget.elements[0].className).to.equal('widget widget--foo');
         expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');

@@ -117,7 +117,8 @@ class BEM {
      */
     modify(...modifiers) {
         const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
-        return this.elements.forEach((el) => el.classList.add(...classes));
+        this.elements.forEach((el) => el.classList.add(...classes));
+        return this;
     }
 
     /**
@@ -130,7 +131,8 @@ class BEM {
      */
     unmodify(...modifiers) {
         const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
-        return this.elements.forEach((el) => el.classList.remove(...classes));
+        this.elements.forEach((el) => el.classList.remove(...classes));
+        return this;
     }
 
     /**
@@ -142,11 +144,12 @@ class BEM {
      * @api public
      */
     toggle(...modifiers) {
-        return this.elements.forEach((el) => {
+        this.elements.forEach((el) => {
             modifiers.forEach((mod) => {
                 el.classList.toggle(this.name + modifierSeparator + mod);
             });
         });
+        return this;
     }
 
     /**

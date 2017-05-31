@@ -8211,11 +8211,12 @@ var BEM = function () {
             var classes = modifiers.map(function (mod) {
                 return _this3.name + modifierSeparator + mod;
             });
-            return this.elements.forEach(function (el) {
+            this.elements.forEach(function (el) {
                 var _el$classList;
 
                 return (_el$classList = el.classList).add.apply(_el$classList, _toConsumableArray(classes));
             });
+            return this;
         }
 
         /**
@@ -8239,11 +8240,12 @@ var BEM = function () {
             var classes = modifiers.map(function (mod) {
                 return _this4.name + modifierSeparator + mod;
             });
-            return this.elements.forEach(function (el) {
+            this.elements.forEach(function (el) {
                 var _el$classList2;
 
                 return (_el$classList2 = el.classList).remove.apply(_el$classList2, _toConsumableArray(classes));
             });
+            return this;
         }
 
         /**
@@ -8264,11 +8266,12 @@ var BEM = function () {
                 modifiers[_key3] = arguments[_key3];
             }
 
-            return this.elements.forEach(function (el) {
+            this.elements.forEach(function (el) {
                 modifiers.forEach(function (mod) {
                     el.classList.toggle(_this5.name + modifierSeparator + mod);
                 });
             });
+            return this;
         }
 
         /**
@@ -8400,8 +8403,8 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
-        widget.modify('foo');
-        header.modify('bar', 'baz');
+        (0, _chai.expect)(widget.modify('foo')).to.equal(widget);
+        (0, _chai.expect)(header.modify('bar', 'baz')).to.equal(header);
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
@@ -8414,8 +8417,8 @@ describe('bem', function () {
         widget.modify('foo');
         header.modify('bar', 'baz');
 
-        widget.unmodify('foo');
-        header.unmodify('bar', 'baz');
+        (0, _chai.expect)(widget.unmodify('foo')).to.equal(widget);
+        (0, _chai.expect)(header.unmodify('bar', 'baz')).to.equal(header);
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
@@ -8425,8 +8428,8 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
-        widget.toggle('foo');
-        header.toggle('bar', 'baz');
+        (0, _chai.expect)(widget.toggle('foo')).to.equal(widget);
+        (0, _chai.expect)(header.toggle('bar', 'baz')).to.equal(header);
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
