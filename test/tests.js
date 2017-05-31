@@ -8225,6 +8225,25 @@ var BEM = function () {
                 el.classList.remove(_this4.name + modifierSeparator + modifier);
             });
         }
+
+        /**
+         * Toggle adding/removing a modifier class to
+         * the currently selected elements
+         *
+         * @param {String} modifier
+         * @return {BEM}
+         * @api public
+         */
+
+    }, {
+        key: 'toggle',
+        value: function toggle(modifier) {
+            var _this5 = this;
+
+            return this.elements.forEach(function (el) {
+                el.classList.toggle(_this5.name + modifierSeparator + modifier);
+            });
+        }
     }]);
 
     return BEM;
@@ -8342,6 +8361,23 @@ describe('bem', function () {
 
         widget.unmodify('foo');
         header.unmodify('bar');
+
+        (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
+        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
+    });
+
+    it('should be able to toggle adding/removing a modifier from the currently selected elements', function () {
+        var widget = (0, _bem2.default)('.widget');
+        var header = widget.element('header');
+
+        widget.toggle('foo');
+        header.toggle('bar');
+
+        (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
+        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar');
+
+        widget.toggle('foo');
+        header.toggle('bar');
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');

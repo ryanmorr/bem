@@ -134,6 +134,20 @@ class BEM {
             el.classList.remove(this.name + modifierSeparator + modifier);
         });
     }
+
+    /**
+     * Toggle adding/removing a modifier class to
+     * the currently selected elements
+     *
+     * @param {String} modifier
+     * @return {BEM}
+     * @api public
+     */
+    toggle(modifier) {
+        return this.elements.forEach((el) => {
+            el.classList.toggle(this.name + modifierSeparator + modifier);
+        });
+    }
 }
 
 /**

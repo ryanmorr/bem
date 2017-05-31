@@ -99,4 +99,21 @@ describe('bem', () => {
         expect(widget.elements[0].className).to.equal('widget');
         expect(header.elements[0].className).to.equal('widget__header');
     });
+
+    it('should be able to toggle adding/removing a modifier from the currently selected elements', () => {
+        const widget = bem('.widget');
+        const header = widget.element('header');
+
+        widget.toggle('foo');
+        header.toggle('bar');
+
+        expect(widget.elements[0].className).to.equal('widget widget--foo');
+        expect(header.elements[0].className).to.equal('widget__header widget__header--bar');
+
+        widget.toggle('foo');
+        header.toggle('bar');
+
+        expect(widget.elements[0].className).to.equal('widget');
+        expect(header.elements[0].className).to.equal('widget__header');
+    });
 });
