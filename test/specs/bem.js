@@ -44,25 +44,22 @@ describe('bem', () => {
     it('should be able to get a BEM block by CSS selector', () => {
         const widget = bem('.widget');
 
-        expect(widget.elements).to.be.an('array');
-        expect(widget.elements).to.have.lengthOf(1);
-        expect(widget.elements[0].id).to.equal('widget-1');
+        expect(widget).to.have.lengthOf(1);
+        expect(widget[0].id).to.equal('widget-1');
     });
 
     it('should be able to get a BEM block by passing an element', () => {
         const widget = bem(document.querySelector('.widget'));
 
-        expect(widget.elements).to.be.an('array');
-        expect(widget.elements).to.have.lengthOf(1);
-        expect(widget.elements[0].id).to.equal('widget-1');
+        expect(widget).to.have.lengthOf(1);
+        expect(widget[0].id).to.equal('widget-1');
     });
 
     it('should be able to get a BEM block by passing an array/nodelist', () => {
         const widget = bem(document.querySelectorAll('.widget'));
 
-        expect(widget.elements).to.be.an('array');
-        expect(widget.elements).to.have.lengthOf(1);
-        expect(widget.elements[0].id).to.equal('widget-1');
+        expect(widget).to.have.lengthOf(1);
+        expect(widget[0].id).to.equal('widget-1');
     });
 
     it('should extract the BEM block/element name from selected element(s)', () => {
@@ -75,25 +72,24 @@ describe('bem', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
-        expect(header.elements).to.be.an('array');
-        expect(header.elements).to.have.lengthOf(1);
-        expect(header.elements[0].className).to.equal('widget__header');
+        expect(header).to.have.lengthOf(1);
+        expect(header[0].className).to.equal('widget__header');
     });
 
     it('should be able filter the query for blocks-elements based on modifiers', () => {
         const cmp = bem('.component');
         const el1 = cmp.element('element', 'foo');
 
-        expect(el1.elements).to.have.lengthOf(3);
-        expect(el1.elements[0].id).to.equal('element-1');
-        expect(el1.elements[1].id).to.equal('element-2');
-        expect(el1.elements[2].id).to.equal('element-3');
+        expect(el1).to.have.lengthOf(3);
+        expect(el1[0].id).to.equal('element-1');
+        expect(el1[1].id).to.equal('element-2');
+        expect(el1[2].id).to.equal('element-3');
 
         const el2 = cmp.element('element', 'foo', 'bar');
 
-        expect(el2.elements).to.have.lengthOf(2);
-        expect(el2.elements[0].id).to.equal('element-1');
-        expect(el2.elements[1].id).to.equal('element-3');
+        expect(el2).to.have.lengthOf(2);
+        expect(el2[0].id).to.equal('element-1');
+        expect(el2[1].id).to.equal('element-3');
     });
 
     it('should be able to iterate through the currently selected elements', () => {
@@ -113,8 +109,8 @@ describe('bem', () => {
         widget.modify('foo');
         header.modify('bar', 'baz');
 
-        expect(widget.elements[0].className).to.equal('widget widget--foo');
-        expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
+        expect(widget[0].className).to.equal('widget widget--foo');
+        expect(header[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
     });
 
     it('should be able to remove one or more modifiers from the currently selected elements', () => {
@@ -127,8 +123,8 @@ describe('bem', () => {
         widget.unmodify('foo');
         header.unmodify('bar', 'baz');
 
-        expect(widget.elements[0].className).to.equal('widget');
-        expect(header.elements[0].className).to.equal('widget__header');
+        expect(widget[0].className).to.equal('widget');
+        expect(header[0].className).to.equal('widget__header');
     });
 
     it('should be able to toggle adding/removing one or more modifiers from the currently selected elements', () => {
@@ -138,14 +134,14 @@ describe('bem', () => {
         widget.toggle('foo');
         header.toggle('bar', 'baz');
 
-        expect(widget.elements[0].className).to.equal('widget widget--foo');
-        expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
+        expect(widget[0].className).to.equal('widget widget--foo');
+        expect(header[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
 
         widget.toggle('foo');
         header.toggle('bar');
 
-        expect(widget.elements[0].className).to.equal('widget');
-        expect(header.elements[0].className).to.equal('widget__header widget__header--baz');
+        expect(widget[0].className).to.equal('widget');
+        expect(header[0].className).to.equal('widget__header widget__header--baz');
     });
 
     it('should be able to determine if an element has one or more modifiers', () => {

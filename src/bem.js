@@ -51,6 +51,22 @@ function hasModifiers(el, name, ...modifiers) {
 }
 
 /**
+ * Add elements to a `BEM` isntance as
+ * indexed properties to emulate an array
+ *
+ * @param {BEM} bem
+ * @param {Element} elements
+ * @api private
+ */
+function push(bem, elements) {
+    const len = elements.length;
+    for (let i = 0; i < len; i++) {
+        bem[i] = elements[i];
+    }
+    bem.length = len;
+}
+
+/**
  * Helper class for maninuplating elements
  * according to the BEM (Block Element Modifier)
  * methodology
@@ -72,13 +88,13 @@ class BEM {
      */
     constructor(selector, context = document, name = null) {
         if (selector.nodeType) {
-            this.elements = [selector];
+            push(this, [selector]);
         } else if (isArrayLike(selector)) {
-            this.elements = toArray(selector);
+            push(this, selector);
         } else {
-            this.elements = toArray(context.querySelectorAll(selector));
+            push(this, context.querySelectorAll(selector));
         }
-        this.name = name || this.elements[0].className.split(' ')[0];
+        this.name = name || this[0].className.split(' ')[0];
     }
 
     /**
@@ -90,7 +106,10 @@ class BEM {
      * @api public
      */
     each(fn) {
-        this.elements.forEach(fn);
+        for (let i = 0, len = this.length; i < len; i++) {
+            const el = this[i];
+            fn.call(el, el, i, this);
+        }
         return this;
     }
 
@@ -105,9 +124,8 @@ class BEM {
      */
     element(name, ...modifiers) {
         name = this.name + elementSeparator + name;
-        let elements = this.elements.reduce((els, el) => {
-            return els.concat(toArray(el.getElementsByClassName(name)));
-        }, []);
+        let elements = [];
+        this.each((el) => elements.push.apply(elements, toArray(el.getElementsByClassName(name))));
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
         }
@@ -166,7 +184,7 @@ class BEM {
      * @api public
      */
     is(...modifiers) {
-        return hasModifiers(this.elements[0], this.name, ...modifiers);
+        return hasModifiers(this[0], this.name, ...modifiers);
     }
 }
 

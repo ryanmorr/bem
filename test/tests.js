@@ -8122,6 +8122,22 @@ function hasModifiers(el, name) {
 }
 
 /**
+ * Add elements to a `BEM` isntance as
+ * indexed properties to emulate an array
+ *
+ * @param {BEM} bem
+ * @param {Element} elements
+ * @api private
+ */
+function push(bem, elements) {
+    var len = elements.length;
+    for (var i = 0; i < len; i++) {
+        bem[i] = elements[i];
+    }
+    bem.length = len;
+}
+
+/**
  * Helper class for maninuplating elements
  * according to the BEM (Block Element Modifier)
  * methodology
@@ -8149,13 +8165,13 @@ var BEM = function () {
         _classCallCheck(this, BEM);
 
         if (selector.nodeType) {
-            this.elements = [selector];
+            push(this, [selector]);
         } else if (isArrayLike(selector)) {
-            this.elements = toArray(selector);
+            push(this, selector);
         } else {
-            this.elements = toArray(context.querySelectorAll(selector));
+            push(this, context.querySelectorAll(selector));
         }
-        this.name = name || this.elements[0].className.split(' ')[0];
+        this.name = name || this[0].className.split(' ')[0];
     }
 
     /**
@@ -8171,7 +8187,10 @@ var BEM = function () {
     _createClass(BEM, [{
         key: 'each',
         value: function each(fn) {
-            this.elements.forEach(fn);
+            for (var i = 0, len = this.length; i < len; i++) {
+                var el = this[i];
+                fn.call(el, el, i, this);
+            }
             return this;
         }
 
@@ -8193,9 +8212,10 @@ var BEM = function () {
             }
 
             name = this.name + elementSeparator + name;
-            var elements = this.elements.reduce(function (els, el) {
-                return els.concat(toArray(el.getElementsByClassName(name)));
-            }, []);
+            var elements = [];
+            this.each(function (el) {
+                return elements.push.apply(elements, toArray(el.getElementsByClassName(name)));
+            });
             if (modifiers.length) {
                 elements = elements.filter(function (el) {
                     return hasModifiers.apply(undefined, [el, name].concat(modifiers));
@@ -8302,7 +8322,7 @@ var BEM = function () {
                 modifiers[_key6] = arguments[_key6];
             }
 
-            return hasModifiers.apply(undefined, [this.elements[0], this.name].concat(modifiers));
+            return hasModifiers.apply(undefined, [this[0], this.name].concat(modifiers));
         }
     }]);
 
@@ -8356,25 +8376,22 @@ describe('bem', function () {
     it('should be able to get a BEM block by CSS selector', function () {
         var widget = (0, _bem2.default)('.widget');
 
-        (0, _chai.expect)(widget.elements).to.be.an('array');
-        (0, _chai.expect)(widget.elements).to.have.lengthOf(1);
-        (0, _chai.expect)(widget.elements[0].id).to.equal('widget-1');
+        (0, _chai.expect)(widget).to.have.lengthOf(1);
+        (0, _chai.expect)(widget[0].id).to.equal('widget-1');
     });
 
     it('should be able to get a BEM block by passing an element', function () {
         var widget = (0, _bem2.default)(document.querySelector('.widget'));
 
-        (0, _chai.expect)(widget.elements).to.be.an('array');
-        (0, _chai.expect)(widget.elements).to.have.lengthOf(1);
-        (0, _chai.expect)(widget.elements[0].id).to.equal('widget-1');
+        (0, _chai.expect)(widget).to.have.lengthOf(1);
+        (0, _chai.expect)(widget[0].id).to.equal('widget-1');
     });
 
     it('should be able to get a BEM block by passing an array/nodelist', function () {
         var widget = (0, _bem2.default)(document.querySelectorAll('.widget'));
 
-        (0, _chai.expect)(widget.elements).to.be.an('array');
-        (0, _chai.expect)(widget.elements).to.have.lengthOf(1);
-        (0, _chai.expect)(widget.elements[0].id).to.equal('widget-1');
+        (0, _chai.expect)(widget).to.have.lengthOf(1);
+        (0, _chai.expect)(widget[0].id).to.equal('widget-1');
     });
 
     it('should extract the BEM block/element name from selected element(s)', function () {
@@ -8387,25 +8404,24 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
-        (0, _chai.expect)(header.elements).to.be.an('array');
-        (0, _chai.expect)(header.elements).to.have.lengthOf(1);
-        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
+        (0, _chai.expect)(header).to.have.lengthOf(1);
+        (0, _chai.expect)(header[0].className).to.equal('widget__header');
     });
 
     it('should be able filter the query for blocks-elements based on modifiers', function () {
         var cmp = (0, _bem2.default)('.component');
         var el1 = cmp.element('element', 'foo');
 
-        (0, _chai.expect)(el1.elements).to.have.lengthOf(3);
-        (0, _chai.expect)(el1.elements[0].id).to.equal('element-1');
-        (0, _chai.expect)(el1.elements[1].id).to.equal('element-2');
-        (0, _chai.expect)(el1.elements[2].id).to.equal('element-3');
+        (0, _chai.expect)(el1).to.have.lengthOf(3);
+        (0, _chai.expect)(el1[0].id).to.equal('element-1');
+        (0, _chai.expect)(el1[1].id).to.equal('element-2');
+        (0, _chai.expect)(el1[2].id).to.equal('element-3');
 
         var el2 = cmp.element('element', 'foo', 'bar');
 
-        (0, _chai.expect)(el2.elements).to.have.lengthOf(2);
-        (0, _chai.expect)(el2.elements[0].id).to.equal('element-1');
-        (0, _chai.expect)(el2.elements[1].id).to.equal('element-3');
+        (0, _chai.expect)(el2).to.have.lengthOf(2);
+        (0, _chai.expect)(el2[0].id).to.equal('element-1');
+        (0, _chai.expect)(el2[1].id).to.equal('element-3');
     });
 
     it('should be able to iterate through the currently selected elements', function () {
@@ -8425,8 +8441,8 @@ describe('bem', function () {
         widget.modify('foo');
         header.modify('bar', 'baz');
 
-        (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
-        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
+        (0, _chai.expect)(widget[0].className).to.equal('widget widget--foo');
+        (0, _chai.expect)(header[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
     });
 
     it('should be able to remove one or more modifiers from the currently selected elements', function () {
@@ -8439,8 +8455,8 @@ describe('bem', function () {
         widget.unmodify('foo');
         header.unmodify('bar', 'baz');
 
-        (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
-        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
+        (0, _chai.expect)(widget[0].className).to.equal('widget');
+        (0, _chai.expect)(header[0].className).to.equal('widget__header');
     });
 
     it('should be able to toggle adding/removing one or more modifiers from the currently selected elements', function () {
@@ -8450,14 +8466,14 @@ describe('bem', function () {
         widget.toggle('foo');
         header.toggle('bar', 'baz');
 
-        (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
-        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
+        (0, _chai.expect)(widget[0].className).to.equal('widget widget--foo');
+        (0, _chai.expect)(header[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
 
         widget.toggle('foo');
         header.toggle('bar');
 
-        (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
-        (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--baz');
+        (0, _chai.expect)(widget[0].className).to.equal('widget');
+        (0, _chai.expect)(header[0].className).to.equal('widget__header widget__header--baz');
     });
 
     it('should be able to determine if an element has one or more modifiers', function () {
