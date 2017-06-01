@@ -8176,34 +8176,6 @@ var BEM = function () {
         }
 
         /**
-         * Find BEM blocks that are decendants
-         * of the currently selected elements
-         *
-         * @param {String} name
-         * @param {...String} modifiers
-         * @return {BEM}
-         * @api public
-         */
-
-    }, {
-        key: 'block',
-        value: function block(name) {
-            for (var _len2 = arguments.length, modifiers = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                modifiers[_key2 - 1] = arguments[_key2];
-            }
-
-            var elements = this.elements.reduce(function (els, el) {
-                return els.concat(toArray(el.getElementsByClassName(name)));
-            }, []);
-            if (modifiers.length) {
-                elements = elements.filter(function (el) {
-                    return hasModifiers.apply(undefined, [el, name].concat(modifiers));
-                });
-            }
-            return new BEM(elements, null, name);
-        }
-
-        /**
          * Find BEM block-elements that are decendants
          * of the currently selected elements
          *
@@ -8216,8 +8188,8 @@ var BEM = function () {
     }, {
         key: 'element',
         value: function element(name) {
-            for (var _len3 = arguments.length, modifiers = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-                modifiers[_key3 - 1] = arguments[_key3];
+            for (var _len2 = arguments.length, modifiers = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                modifiers[_key2 - 1] = arguments[_key2];
             }
 
             name = this.name + elementSeparator + name;
@@ -8246,8 +8218,8 @@ var BEM = function () {
         value: function modify() {
             var _this = this;
 
-            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-                modifiers[_key4] = arguments[_key4];
+            for (var _len3 = arguments.length, modifiers = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+                modifiers[_key3] = arguments[_key3];
             }
 
             var classes = modifiers.map(function (mod) {
@@ -8274,8 +8246,8 @@ var BEM = function () {
         value: function unmodify() {
             var _this2 = this;
 
-            for (var _len5 = arguments.length, modifiers = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-                modifiers[_key5] = arguments[_key5];
+            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+                modifiers[_key4] = arguments[_key4];
             }
 
             var classes = modifiers.map(function (mod) {
@@ -8302,8 +8274,8 @@ var BEM = function () {
         value: function toggle() {
             var _this3 = this;
 
-            for (var _len6 = arguments.length, modifiers = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-                modifiers[_key6] = arguments[_key6];
+            for (var _len5 = arguments.length, modifiers = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+                modifiers[_key5] = arguments[_key5];
             }
 
             return this.each(function (el) {
@@ -8326,8 +8298,8 @@ var BEM = function () {
     }, {
         key: 'is',
         value: function is() {
-            for (var _len7 = arguments.length, modifiers = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-                modifiers[_key7] = arguments[_key7];
+            for (var _len6 = arguments.length, modifiers = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+                modifiers[_key6] = arguments[_key6];
             }
 
             return hasModifiers.apply(undefined, [this.elements[0], this.name].concat(modifiers));
@@ -8411,31 +8383,6 @@ describe('bem', function () {
         (0, _chai.expect)(widget.name).to.equal('widget');
     });
 
-    it('should be able to get one or more blocks that are decendants of the currently selected elements', function () {
-        var widget = (0, _bem2.default)('.widget');
-        var tabs = widget.block('tabs');
-
-        (0, _chai.expect)(tabs.elements).to.be.an('array');
-        (0, _chai.expect)(tabs.elements).to.have.lengthOf(1);
-        (0, _chai.expect)(tabs.elements[0].id).to.equal('tabs-1');
-    });
-
-    it('should be able filter the query for blocks based on modifiers', function () {
-        var wrapper = (0, _bem2.default)('.wrapper');
-        var cmp1 = wrapper.block('component', 'foo');
-
-        (0, _chai.expect)(cmp1.elements).to.have.lengthOf(3);
-        (0, _chai.expect)(cmp1.elements[0].id).to.equal('component-1');
-        (0, _chai.expect)(cmp1.elements[1].id).to.equal('component-2');
-        (0, _chai.expect)(cmp1.elements[2].id).to.equal('component-3');
-
-        var cmp2 = wrapper.block('component', 'foo', 'bar');
-
-        (0, _chai.expect)(cmp2.elements).to.have.lengthOf(2);
-        (0, _chai.expect)(cmp2.elements[0].id).to.equal('component-2');
-        (0, _chai.expect)(cmp2.elements[1].id).to.equal('component-3');
-    });
-
     it('should be able to get one or more block-elements that are decendants of the currently selected elements', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
@@ -8446,15 +8393,15 @@ describe('bem', function () {
     });
 
     it('should be able filter the query for blocks-elements based on modifiers', function () {
-        var wrapper = (0, _bem2.default)('.wrapper');
-        var el1 = wrapper.block('component').element('element', 'foo');
+        var cmp = (0, _bem2.default)('.component');
+        var el1 = cmp.element('element', 'foo');
 
         (0, _chai.expect)(el1.elements).to.have.lengthOf(3);
         (0, _chai.expect)(el1.elements[0].id).to.equal('element-1');
         (0, _chai.expect)(el1.elements[1].id).to.equal('element-2');
         (0, _chai.expect)(el1.elements[2].id).to.equal('element-3');
 
-        var el2 = wrapper.block('component').element('element', 'foo', 'bar');
+        var el2 = cmp.element('element', 'foo', 'bar');
 
         (0, _chai.expect)(el2.elements).to.have.lengthOf(2);
         (0, _chai.expect)(el2.elements[0].id).to.equal('element-1');

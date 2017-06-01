@@ -95,25 +95,6 @@ class BEM {
     }
 
     /**
-     * Find BEM blocks that are decendants
-     * of the currently selected elements
-     *
-     * @param {String} name
-     * @param {...String} modifiers
-     * @return {BEM}
-     * @api public
-     */
-    block(name, ...modifiers) {
-        let elements = this.elements.reduce((els, el) => {
-            return els.concat(toArray(el.getElementsByClassName(name)));
-        }, []);
-        if (modifiers.length) {
-            elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
-        }
-        return new BEM(elements, null, name);
-    }
-
-    /**
      * Find BEM block-elements that are decendants
      * of the currently selected elements
      *
