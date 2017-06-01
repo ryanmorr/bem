@@ -1,7 +1,6 @@
 /**
  * Common variables
  */
-const slice = [].slice;
 const elementSeparator = '__';
 const modifierSeparator = '--';
 
@@ -19,21 +18,6 @@ function isArrayLike(obj) {
         && typeof obj.length === 'number'
         && obj.length >= 0
         && obj.length % 1 === 0;
-}
-
-/**
- * Convert an array-like object to
- * an array
- *
- * @param {ArrayLike} obj
- * @return {Array}
- * @api private
- */
-function toArray(obj) {
-    if (Array.from) {
-        return Array.from(obj);
-    }
-    return slice.call(obj);
 }
 
 /**
@@ -125,7 +109,7 @@ class BEM {
     element(name, ...modifiers) {
         name = this.name + elementSeparator + name;
         let elements = [];
-        this.each((el) => elements.push.apply(elements, toArray(el.getElementsByClassName(name))));
+        this.each((el) => elements.push.apply(elements, el.getElementsByClassName(name)));
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
         }

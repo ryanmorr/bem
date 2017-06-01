@@ -8072,7 +8072,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Common variables
  */
-var slice = [].slice;
 var elementSeparator = '__';
 var modifierSeparator = '--';
 
@@ -8086,21 +8085,6 @@ var modifierSeparator = '--';
  */
 function isArrayLike(obj) {
     return obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && typeof obj.length === 'number' && obj.length >= 0 && obj.length % 1 === 0;
-}
-
-/**
- * Convert an array-like object to
- * an array
- *
- * @param {ArrayLike} obj
- * @return {Array}
- * @api private
- */
-function toArray(obj) {
-    if (Array.from) {
-        return Array.from(obj);
-    }
-    return slice.call(obj);
 }
 
 /**
@@ -8214,7 +8198,7 @@ var BEM = function () {
             name = this.name + elementSeparator + name;
             var elements = [];
             this.each(function (el) {
-                return elements.push.apply(elements, toArray(el.getElementsByClassName(name)));
+                return elements.push.apply(elements, el.getElementsByClassName(name));
             });
             if (modifiers.length) {
                 elements = elements.filter(function (el) {
