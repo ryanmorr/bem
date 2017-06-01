@@ -8115,6 +8115,27 @@ function getBEMName(el) {
 }
 
 /**
+ * Check is an element has one or
+ * more modifiers
+ *
+ * @param {Element} el
+ * @return {String}
+ * @api private
+ */
+function hasModifiers(el, name) {
+    for (var _len = arguments.length, modifiers = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+        modifiers[_key - 2] = arguments[_key];
+    }
+
+    return modifiers.reduce(function (is, modifier) {
+        if (!is) {
+            return is;
+        }
+        return el.classList.contains(name + modifierSeparator + modifier);
+    }, true);
+}
+
+/**
  * Helper class for maninuplating elements
  * according to the BEM (Block Element Modifier)
  * methodology
@@ -8171,6 +8192,7 @@ var BEM = function () {
          * of the currently selected elements
          *
          * @param {String} name
+         * @param {...String} modifiers
          * @return {BEM}
          * @api public
          */
@@ -8180,10 +8202,20 @@ var BEM = function () {
         value: function block(name) {
             var _this = this;
 
-            return bem(this.elements.reduce(function (els, el) {
+            for (var _len2 = arguments.length, modifiers = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                modifiers[_key2 - 1] = arguments[_key2];
+            }
+
+            var elements = this.elements.reduce(function (els, el) {
                 var selector = '.' + _this.name + ' .' + name;
                 return els.concat(toArray(el.querySelectorAll(selector)));
-            }, []));
+            }, []);
+            if (modifiers.length) {
+                elements = elements.filter(function (el) {
+                    return hasModifiers.apply(undefined, [el, name].concat(modifiers));
+                });
+            }
+            return bem(elements);
         }
 
         /**
@@ -8191,6 +8223,7 @@ var BEM = function () {
          * of the currently selected elements
          *
          * @param {String} name
+         * @param {...String} modifiers
          * @return {BEM}
          * @api public
          */
@@ -8198,19 +8231,28 @@ var BEM = function () {
     }, {
         key: 'element',
         value: function element(name) {
-            var _this2 = this;
+            for (var _len3 = arguments.length, modifiers = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+                modifiers[_key3 - 1] = arguments[_key3];
+            }
 
-            return bem(this.elements.reduce(function (els, el) {
-                var selector = '.' + _this2.name + elementSeparator + name;
+            name = this.name + elementSeparator + name;
+            var elements = this.elements.reduce(function (els, el) {
+                var selector = '.' + name;
                 return els.concat(toArray(el.querySelectorAll(selector)));
-            }, []));
+            }, []);
+            if (modifiers.length) {
+                elements = elements.filter(function (el) {
+                    return hasModifiers.apply(undefined, [el, name].concat(modifiers));
+                });
+            }
+            return bem(elements);
         }
 
         /**
          * Add one or more modifiers to the
          * currently selected elements
          *
-         * @param {...String} modifier
+         * @param {...String} modifiers
          * @return {BEM}
          * @api public
          */
@@ -8218,14 +8260,14 @@ var BEM = function () {
     }, {
         key: 'modify',
         value: function modify() {
-            var _this3 = this;
+            var _this2 = this;
 
-            for (var _len = arguments.length, modifiers = Array(_len), _key = 0; _key < _len; _key++) {
-                modifiers[_key] = arguments[_key];
+            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+                modifiers[_key4] = arguments[_key4];
             }
 
             var classes = modifiers.map(function (mod) {
-                return _this3.name + modifierSeparator + mod;
+                return _this2.name + modifierSeparator + mod;
             });
             return this.each(function (el) {
                 var _el$classList;
@@ -8238,7 +8280,7 @@ var BEM = function () {
          * Remove one or more modifiers from the
          * currently selected elements
          *
-         * @param {...String} modifier
+         * @param {...String} modifiers
          * @return {BEM}
          * @api public
          */
@@ -8246,14 +8288,14 @@ var BEM = function () {
     }, {
         key: 'unmodify',
         value: function unmodify() {
-            var _this4 = this;
+            var _this3 = this;
 
-            for (var _len2 = arguments.length, modifiers = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-                modifiers[_key2] = arguments[_key2];
+            for (var _len5 = arguments.length, modifiers = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+                modifiers[_key5] = arguments[_key5];
             }
 
             var classes = modifiers.map(function (mod) {
-                return _this4.name + modifierSeparator + mod;
+                return _this3.name + modifierSeparator + mod;
             });
             return this.each(function (el) {
                 var _el$classList2;
@@ -8266,7 +8308,7 @@ var BEM = function () {
          * Toggle adding/removing one or more modifiers
          * to the currently selected elements
          *
-         * @param {...String} modifier
+         * @param {...String} modifiers
          * @return {BEM}
          * @api public
          */
@@ -8274,15 +8316,15 @@ var BEM = function () {
     }, {
         key: 'toggle',
         value: function toggle() {
-            var _this5 = this;
+            var _this4 = this;
 
-            for (var _len3 = arguments.length, modifiers = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-                modifiers[_key3] = arguments[_key3];
+            for (var _len6 = arguments.length, modifiers = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+                modifiers[_key6] = arguments[_key6];
             }
 
             return this.each(function (el) {
                 modifiers.forEach(function (mod) {
-                    el.classList.toggle(_this5.name + modifierSeparator + mod);
+                    el.classList.toggle(_this4.name + modifierSeparator + mod);
                 });
             });
         }
@@ -8292,7 +8334,7 @@ var BEM = function () {
          * currently selected elements has one or
          * more modifiers
          *
-         * @param {...String} modifier
+         * @param {...String} modifiers
          * @return {Boolean}
          * @api public
          */
@@ -8300,20 +8342,11 @@ var BEM = function () {
     }, {
         key: 'is',
         value: function is() {
-            var _this6 = this;
-
-            var el = this.elements[0];
-
-            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-                modifiers[_key4] = arguments[_key4];
+            for (var _len7 = arguments.length, modifiers = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+                modifiers[_key7] = arguments[_key7];
             }
 
-            return modifiers.reduce(function (is, modifier) {
-                if (!is) {
-                    return is;
-                }
-                return el.classList.contains(_this6.name + modifierSeparator + modifier);
-            }, true);
+            return hasModifiers.apply(undefined, [this.elements[0], this.name].concat(modifiers));
         }
     }]);
 
@@ -8361,7 +8394,7 @@ describe('bem', function () {
     });
 
     beforeEach(function () {
-        container.innerHTML = '\n            <div id="widget-1" class="widget">\n                <div class="widget__header"></div>\n                <div class="widget__body">\n                    <div id="tabs-1" class="tabs"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                </div>\n                <div class="widget__footer"></div>\n            </div>\n        ';
+        container.innerHTML = '\n            <div id="widget-1" class="widget">\n                <div class="widget__header"></div>\n                <div class="widget__body">\n                    <div id="tabs-1" class="tabs"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                </div>\n                <div class="widget__footer"></div>\n            </div>\n\n            <div class="wrapper">\n                <div id="component-1" class="component component--foo">\n                    <div id="element-1" class="component__element component__element--foo component__element--bar"></div>\n                    <div id="element-2" class="component__element component__element--foo"></div>\n                    <div id="element-3" class="component__element component__element--foo component__element--bar"></div>\n                </div>\n\n                <div id="component-2" class="component component--foo component--bar"></div>\n                <div id="component-3" class="component component--foo component--bar"></div>\n            </div>\n        ';
     });
 
     it('should be able to get a BEM block by CSS selector', function () {
@@ -8403,6 +8436,22 @@ describe('bem', function () {
         (0, _chai.expect)(tabs.elements[0].id).to.equal('tabs-1');
     });
 
+    it('should be able filter the query for blocks based on modifiers', function () {
+        var wrapper = (0, _bem2.default)('.wrapper');
+        var cmp1 = wrapper.block('component', 'foo');
+
+        (0, _chai.expect)(cmp1.elements).to.have.lengthOf(3);
+        (0, _chai.expect)(cmp1.elements[0].id).to.equal('component-1');
+        (0, _chai.expect)(cmp1.elements[1].id).to.equal('component-2');
+        (0, _chai.expect)(cmp1.elements[2].id).to.equal('component-3');
+
+        var cmp2 = wrapper.block('component', 'foo', 'bar');
+
+        (0, _chai.expect)(cmp2.elements).to.have.lengthOf(2);
+        (0, _chai.expect)(cmp2.elements[0].id).to.equal('component-2');
+        (0, _chai.expect)(cmp2.elements[1].id).to.equal('component-3');
+    });
+
     it('should be able to get one or more block-elements that are decendants of the currently selected elements', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
@@ -8410,6 +8459,22 @@ describe('bem', function () {
         (0, _chai.expect)(header.elements).to.be.an('array');
         (0, _chai.expect)(header.elements).to.have.lengthOf(1);
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
+    });
+
+    it('should be able filter the query for blocks-elements based on modifiers', function () {
+        var wrapper = (0, _bem2.default)('.wrapper');
+        var el1 = wrapper.block('component').element('element', 'foo');
+
+        (0, _chai.expect)(el1.elements).to.have.lengthOf(3);
+        (0, _chai.expect)(el1.elements[0].id).to.equal('element-1');
+        (0, _chai.expect)(el1.elements[1].id).to.equal('element-2');
+        (0, _chai.expect)(el1.elements[2].id).to.equal('element-3');
+
+        var el2 = wrapper.block('component').element('element', 'foo', 'bar');
+
+        (0, _chai.expect)(el2.elements).to.have.lengthOf(2);
+        (0, _chai.expect)(el2.elements[0].id).to.equal('element-1');
+        (0, _chai.expect)(el2.elements[1].id).to.equal('element-3');
     });
 
     it('should be able to iterate through the currently selected elements', function () {

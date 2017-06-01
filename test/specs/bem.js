@@ -27,6 +27,17 @@ describe('bem', () => {
                 </div>
                 <div class="widget__footer"></div>
             </div>
+
+            <div class="wrapper">
+                <div id="component-1" class="component component--foo">
+                    <div id="element-1" class="component__element component__element--foo component__element--bar"></div>
+                    <div id="element-2" class="component__element component__element--foo"></div>
+                    <div id="element-3" class="component__element component__element--foo component__element--bar"></div>
+                </div>
+
+                <div id="component-2" class="component component--foo component--bar"></div>
+                <div id="component-3" class="component component--foo component--bar"></div>
+            </div>
         `;
     });
 
@@ -69,6 +80,22 @@ describe('bem', () => {
         expect(tabs.elements[0].id).to.equal('tabs-1');
     });
 
+    it('should be able filter the query for blocks based on modifiers', () => {
+        const wrapper = bem('.wrapper');
+        const cmp1 = wrapper.block('component', 'foo');
+
+        expect(cmp1.elements).to.have.lengthOf(3);
+        expect(cmp1.elements[0].id).to.equal('component-1');
+        expect(cmp1.elements[1].id).to.equal('component-2');
+        expect(cmp1.elements[2].id).to.equal('component-3');
+
+        const cmp2 = wrapper.block('component', 'foo', 'bar');
+
+        expect(cmp2.elements).to.have.lengthOf(2);
+        expect(cmp2.elements[0].id).to.equal('component-2');
+        expect(cmp2.elements[1].id).to.equal('component-3');
+    });
+
     it('should be able to get one or more block-elements that are decendants of the currently selected elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
@@ -76,6 +103,22 @@ describe('bem', () => {
         expect(header.elements).to.be.an('array');
         expect(header.elements).to.have.lengthOf(1);
         expect(header.elements[0].className).to.equal('widget__header');
+    });
+
+    it('should be able filter the query for blocks-elements based on modifiers', () => {
+        const wrapper = bem('.wrapper');
+        const el1 = wrapper.block('component').element('element', 'foo');
+
+        expect(el1.elements).to.have.lengthOf(3);
+        expect(el1.elements[0].id).to.equal('element-1');
+        expect(el1.elements[1].id).to.equal('element-2');
+        expect(el1.elements[2].id).to.equal('element-3');
+
+        const el2 = wrapper.block('component').element('element', 'foo', 'bar');
+
+        expect(el2.elements).to.have.lengthOf(2);
+        expect(el2.elements[0].id).to.equal('element-1');
+        expect(el2.elements[1].id).to.equal('element-3');
     });
 
     it('should be able to iterate through the currently selected elements', () => {

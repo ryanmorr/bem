@@ -48,6 +48,23 @@ function getBEMName(el) {
 }
 
 /**
+ * Check is an element has one or
+ * more modifiers
+ *
+ * @param {Element} el
+ * @return {String}
+ * @api private
+ */
+function hasModifiers(el, name, ...modifiers) {
+    return modifiers.reduce((is, modifier) => {
+        if (!is) {
+            return is;
+        }
+        return el.classList.contains(name + modifierSeparator + modifier);
+    }, true);
+}
+
+/**
  * Helper class for maninuplating elements
  * according to the BEM (Block Element Modifier)
  * methodology
@@ -95,14 +112,19 @@ class BEM {
      * of the currently selected elements
      *
      * @param {String} name
+     * @param {...String} modifiers
      * @return {BEM}
      * @api public
      */
-    block(name) {
-        return bem(this.elements.reduce((els, el) => {
+    block(name, ...modifiers) {
+        let elements = this.elements.reduce((els, el) => {
             const selector = '.' + this.name + ' .' + name;
             return els.concat(toArray(el.querySelectorAll(selector)));
-        }, []));
+        }, []);
+        if (modifiers.length) {
+            elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
+        }
+        return bem(elements);
     }
 
     /**
@@ -110,21 +132,27 @@ class BEM {
      * of the currently selected elements
      *
      * @param {String} name
+     * @param {...String} modifiers
      * @return {BEM}
      * @api public
      */
-    element(name) {
-        return bem(this.elements.reduce((els, el) => {
-            const selector = '.' + this.name + elementSeparator + name;
+    element(name, ...modifiers) {
+        name = this.name + elementSeparator + name;
+        let elements = this.elements.reduce((els, el) => {
+            const selector = '.' + name;
             return els.concat(toArray(el.querySelectorAll(selector)));
-        }, []));
+        }, []);
+        if (modifiers.length) {
+            elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
+        }
+        return bem(elements);
     }
 
     /**
      * Add one or more modifiers to the
      * currently selected elements
      *
-     * @param {...String} modifier
+     * @param {...String} modifiers
      * @return {BEM}
      * @api public
      */
@@ -137,7 +165,7 @@ class BEM {
      * Remove one or more modifiers from the
      * currently selected elements
      *
-     * @param {...String} modifier
+     * @param {...String} modifiers
      * @return {BEM}
      * @api public
      */
@@ -150,7 +178,7 @@ class BEM {
      * Toggle adding/removing one or more modifiers
      * to the currently selected elements
      *
-     * @param {...String} modifier
+     * @param {...String} modifiers
      * @return {BEM}
      * @api public
      */
@@ -167,18 +195,12 @@ class BEM {
      * currently selected elements has one or
      * more modifiers
      *
-     * @param {...String} modifier
+     * @param {...String} modifiers
      * @return {Boolean}
      * @api public
      */
     is(...modifiers) {
-        const el = this.elements[0];
-        return modifiers.reduce((is, modifier) => {
-            if (!is) {
-                return is;
-            }
-            return el.classList.contains(this.name + modifierSeparator + modifier);
-        }, true);
+        return hasModifiers(this.elements[0], this.name, ...modifiers);
     }
 }
 
