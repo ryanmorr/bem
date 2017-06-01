@@ -8188,15 +8188,12 @@ var BEM = function () {
     }, {
         key: 'block',
         value: function block(name) {
-            var _this = this;
-
             for (var _len2 = arguments.length, modifiers = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
                 modifiers[_key2 - 1] = arguments[_key2];
             }
 
             var elements = this.elements.reduce(function (els, el) {
-                var selector = '.' + _this.name + ' .' + name;
-                return els.concat(toArray(el.querySelectorAll(selector)));
+                return els.concat(toArray(el.getElementsByClassName(name)));
             }, []);
             if (modifiers.length) {
                 elements = elements.filter(function (el) {
@@ -8225,8 +8222,7 @@ var BEM = function () {
 
             name = this.name + elementSeparator + name;
             var elements = this.elements.reduce(function (els, el) {
-                var selector = '.' + name;
-                return els.concat(toArray(el.querySelectorAll(selector)));
+                return els.concat(toArray(el.getElementsByClassName(name)));
             }, []);
             if (modifiers.length) {
                 elements = elements.filter(function (el) {
@@ -8248,14 +8244,14 @@ var BEM = function () {
     }, {
         key: 'modify',
         value: function modify() {
-            var _this2 = this;
+            var _this = this;
 
             for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
                 modifiers[_key4] = arguments[_key4];
             }
 
             var classes = modifiers.map(function (mod) {
-                return _this2.name + modifierSeparator + mod;
+                return _this.name + modifierSeparator + mod;
             });
             return this.each(function (el) {
                 var _el$classList;
@@ -8276,14 +8272,14 @@ var BEM = function () {
     }, {
         key: 'unmodify',
         value: function unmodify() {
-            var _this3 = this;
+            var _this2 = this;
 
             for (var _len5 = arguments.length, modifiers = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
                 modifiers[_key5] = arguments[_key5];
             }
 
             var classes = modifiers.map(function (mod) {
-                return _this3.name + modifierSeparator + mod;
+                return _this2.name + modifierSeparator + mod;
             });
             return this.each(function (el) {
                 var _el$classList2;
@@ -8304,7 +8300,7 @@ var BEM = function () {
     }, {
         key: 'toggle',
         value: function toggle() {
-            var _this4 = this;
+            var _this3 = this;
 
             for (var _len6 = arguments.length, modifiers = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
                 modifiers[_key6] = arguments[_key6];
@@ -8312,7 +8308,7 @@ var BEM = function () {
 
             return this.each(function (el) {
                 modifiers.forEach(function (mod) {
-                    el.classList.toggle(_this4.name + modifierSeparator + mod);
+                    el.classList.toggle(_this3.name + modifierSeparator + mod);
                 });
             });
         }

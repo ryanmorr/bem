@@ -105,8 +105,7 @@ class BEM {
      */
     block(name, ...modifiers) {
         let elements = this.elements.reduce((els, el) => {
-            const selector = '.' + this.name + ' .' + name;
-            return els.concat(toArray(el.querySelectorAll(selector)));
+            return els.concat(toArray(el.getElementsByClassName(name)));
         }, []);
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
@@ -126,8 +125,7 @@ class BEM {
     element(name, ...modifiers) {
         name = this.name + elementSeparator + name;
         let elements = this.elements.reduce((els, el) => {
-            const selector = '.' + name;
-            return els.concat(toArray(el.querySelectorAll(selector)));
+            return els.concat(toArray(el.getElementsByClassName(name)));
         }, []);
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
