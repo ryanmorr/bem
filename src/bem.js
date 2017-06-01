@@ -56,12 +56,9 @@ function getBEMName(el) {
  * @api private
  */
 function hasModifiers(el, name, ...modifiers) {
-    return modifiers.reduce((is, modifier) => {
-        if (!is) {
-            return is;
-        }
+    return modifiers.every((modifier) => {
         return el.classList.contains(name + modifierSeparator + modifier);
-    }, true);
+    });
 }
 
 /**

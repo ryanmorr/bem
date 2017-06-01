@@ -8127,12 +8127,9 @@ function hasModifiers(el, name) {
         modifiers[_key - 2] = arguments[_key];
     }
 
-    return modifiers.reduce(function (is, modifier) {
-        if (!is) {
-            return is;
-        }
+    return modifiers.every(function (modifier) {
         return el.classList.contains(name + modifierSeparator + modifier);
-    }, true);
+    });
 }
 
 /**
