@@ -37,17 +37,6 @@ function toArray(obj) {
 }
 
 /**
- * Get BEM class name from element
- *
- * @param {Element} el
- * @return {String}
- * @api private
- */
-function getBEMName(el) {
-    return el.className.split(' ')[0];
-}
-
-/**
  * Check is an element has one or
  * more modifiers
  *
@@ -89,7 +78,7 @@ class BEM {
         } else {
             this.elements = toArray(context.querySelectorAll(selector));
         }
-        this.name = name || getBEMName(this.elements[0]);
+        this.name = name || this.elements[0].className.split(' ')[0];
     }
 
     /**
