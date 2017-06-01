@@ -110,8 +110,8 @@ describe('bem', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
-        expect(widget.modify('foo')).to.equal(widget);
-        expect(header.modify('bar', 'baz')).to.equal(header);
+        widget.modify('foo');
+        header.modify('bar', 'baz');
 
         expect(widget.elements[0].className).to.equal('widget widget--foo');
         expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
@@ -124,8 +124,8 @@ describe('bem', () => {
         widget.modify('foo');
         header.modify('bar', 'baz');
 
-        expect(widget.unmodify('foo')).to.equal(widget);
-        expect(header.unmodify('bar', 'baz')).to.equal(header);
+        widget.unmodify('foo');
+        header.unmodify('bar', 'baz');
 
         expect(widget.elements[0].className).to.equal('widget');
         expect(header.elements[0].className).to.equal('widget__header');
@@ -135,8 +135,8 @@ describe('bem', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
-        expect(widget.toggle('foo')).to.equal(widget);
-        expect(header.toggle('bar', 'baz')).to.equal(header);
+        widget.toggle('foo');
+        header.toggle('bar', 'baz');
 
         expect(widget.elements[0].className).to.equal('widget widget--foo');
         expect(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
@@ -166,5 +166,12 @@ describe('bem', () => {
         expect(header.is('bar', 'baz')).to.equal(false);
         expect(header.is('baz')).to.equal(false);
         expect(header.is('bar')).to.equal(true);
+    });
+
+    it('should support method chaining', () => {
+        const widget = bem('.widget');
+        expect(widget.modify('foo')).to.equal(widget);
+        expect(widget.unmodify('foo')).to.equal(widget);
+        expect(widget.toggle('foo')).to.equal(widget);
     });
 });

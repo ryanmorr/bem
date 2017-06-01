@@ -8422,8 +8422,8 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
-        (0, _chai.expect)(widget.modify('foo')).to.equal(widget);
-        (0, _chai.expect)(header.modify('bar', 'baz')).to.equal(header);
+        widget.modify('foo');
+        header.modify('bar', 'baz');
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
@@ -8436,8 +8436,8 @@ describe('bem', function () {
         widget.modify('foo');
         header.modify('bar', 'baz');
 
-        (0, _chai.expect)(widget.unmodify('foo')).to.equal(widget);
-        (0, _chai.expect)(header.unmodify('bar', 'baz')).to.equal(header);
+        widget.unmodify('foo');
+        header.unmodify('bar', 'baz');
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header');
@@ -8447,8 +8447,8 @@ describe('bem', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
-        (0, _chai.expect)(widget.toggle('foo')).to.equal(widget);
-        (0, _chai.expect)(header.toggle('bar', 'baz')).to.equal(header);
+        widget.toggle('foo');
+        header.toggle('bar', 'baz');
 
         (0, _chai.expect)(widget.elements[0].className).to.equal('widget widget--foo');
         (0, _chai.expect)(header.elements[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
@@ -8478,6 +8478,13 @@ describe('bem', function () {
         (0, _chai.expect)(header.is('bar', 'baz')).to.equal(false);
         (0, _chai.expect)(header.is('baz')).to.equal(false);
         (0, _chai.expect)(header.is('bar')).to.equal(true);
+    });
+
+    it('should support method chaining', function () {
+        var widget = (0, _bem2.default)('.widget');
+        (0, _chai.expect)(widget.modify('foo')).to.equal(widget);
+        (0, _chai.expect)(widget.unmodify('foo')).to.equal(widget);
+        (0, _chai.expect)(widget.toggle('foo')).to.equal(widget);
     });
 });
 
