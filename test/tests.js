@@ -8150,10 +8150,12 @@ var BEM = function () {
      * @constructor
      * @param {String|Element|ArrayLike} selector
      * @param {Element} context (optional)
+     * @param {String} name
      * @api private
      */
     function BEM(selector) {
         var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+        var name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
         _classCallCheck(this, BEM);
 
@@ -8164,7 +8166,7 @@ var BEM = function () {
         } else {
             this.elements = toArray(context.querySelectorAll(selector));
         }
-        this.name = getBEMName(this.elements[0]);
+        this.name = name || getBEMName(this.elements[0]);
     }
 
     /**
@@ -8212,7 +8214,7 @@ var BEM = function () {
                     return hasModifiers.apply(undefined, [el, name].concat(modifiers));
                 });
             }
-            return bem(elements);
+            return new BEM(elements, null, name);
         }
 
         /**
@@ -8242,7 +8244,7 @@ var BEM = function () {
                     return hasModifiers.apply(undefined, [el, name].concat(modifiers));
                 });
             }
-            return bem(elements);
+            return new BEM(elements, null, name);
         }
 
         /**

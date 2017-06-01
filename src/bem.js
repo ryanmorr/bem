@@ -78,9 +78,10 @@ class BEM {
      * @constructor
      * @param {String|Element|ArrayLike} selector
      * @param {Element} context (optional)
+     * @param {String} name (optional)
      * @api private
      */
-    constructor(selector, context = document) {
+    constructor(selector, context = document, name = null) {
         if (selector.nodeType) {
             this.elements = [selector];
         } else if (isArrayLike(selector)) {
@@ -88,7 +89,7 @@ class BEM {
         } else {
             this.elements = toArray(context.querySelectorAll(selector));
         }
-        this.name = getBEMName(this.elements[0]);
+        this.name = name || getBEMName(this.elements[0]);
     }
 
     /**
@@ -121,7 +122,7 @@ class BEM {
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
         }
-        return bem(elements);
+        return new BEM(elements, null, name);
     }
 
     /**
@@ -142,7 +143,7 @@ class BEM {
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
         }
-        return bem(elements);
+        return new BEM(elements, null, name);
     }
 
     /**
