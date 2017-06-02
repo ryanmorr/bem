@@ -8058,22 +8058,316 @@ Library.prototype.test = function(obj, type) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = bem;
+
+var _block = require('./block');
+
+var _block2 = _interopRequireDefault(_block);
+
+var _util = require('./util');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Export the `bem` function
+ *
+ * @param {String|Element} blocks
+ * @param {Element} context (optional)
+ * @return {BEM}
+ * @api public
+ */
+/**
+ * Import dependencies
+ */
+function bem(selector) {
+    var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+
+    if (selector.nodeType) {
+        selector = [selector];
+    }
+    if ((0, _util.isArrayLike)(selector)) {
+        return new _block2.default(selector);
+    }
+    return new _block2.default(context.querySelectorAll(selector));
+}
+module.exports = exports['default'];
+
+},{"./block":41,"./util":43}],41:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _element = require('./element');
 
-exports.default = bem;
+var _element2 = _interopRequireDefault(_element);
+
+var _util = require('./util');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Import dependencies
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+
+/**
+ * BEM block class
+ *
+ * @class Block
+ * @extends Element
+ * @api public
+ */
+var Block = function (_Element) {
+    _inherits(Block, _Element);
+
+    /**
+     * Instantiate the class with a collection
+     * of block level elements
+     *
+     * @constructor
+     * @param {ArrayLike} elements
+     * @api private
+     */
+    function Block(elements) {
+        _classCallCheck(this, Block);
+
+        return _possibleConstructorReturn(this, (Block.__proto__ || Object.getPrototypeOf(Block)).call(this, elements, elements[0].className.split(' ')[0]));
+    }
+
+    /**
+     * Find BEM block-elements that are decendants
+     * of the currently selected elements
+     *
+     * @param {String} name
+     * @param {...String} modifiers
+     * @return {BEM}
+     * @api public
+     */
+
+
+    _createClass(Block, [{
+        key: 'element',
+        value: function element(name) {
+            for (var _len = arguments.length, modifiers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                modifiers[_key - 1] = arguments[_key];
+            }
+
+            name = this.name + _util.elementSeparator + name;
+            var elements = [];
+            this.each(function (el) {
+                return elements.push.apply(elements, el.getElementsByClassName(name));
+            });
+            if (modifiers.length) {
+                elements = elements.filter(function (el) {
+                    return _util.hasModifiers.apply(undefined, [el, name].concat(modifiers));
+                });
+            }
+            return new _element2.default(elements, name);
+        }
+    }]);
+
+    return Block;
+}(_element2.default);
+
+exports.default = Block;
+module.exports = exports['default'];
+
+},{"./element":42,"./util":43}],42:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Import dependencies
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
+var _util = require('./util');
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
+ * Top-level class for maninuplating elements
+ * according to the BEM (Block Element Modifier)
+ * methodology
+ *
+ * @class Element
+ * @api public
+ */
+var Element = function () {
+
+    /**
+     * Instantiate the class with a collection
+     * of elements and the BEM class name
+     *
+     * @constructor
+     * @param {ArrayLike} elements
+     * @api private
+     */
+    function Element(element, name) {
+        _classCallCheck(this, Element);
+
+        (0, _util.push)(this, element);
+        this.name = name;
+    }
+
+    /**
+     * Invoke the passed function for each element
+     * in the collection
+     *
+     * @param {Function} fn
+     * @return {BEM}
+     * @api public
+     */
+
+
+    _createClass(Element, [{
+        key: 'each',
+        value: function each(fn) {
+            for (var i = 0, len = this.length; i < len; i++) {
+                var el = this[i];
+                fn.call(el, el, i, this);
+            }
+            return this;
+        }
+
+        /**
+         * Add one or more modifiers to the
+         * currently selected elements
+         *
+         * @param {...String} modifiers
+         * @return {BEM}
+         * @api public
+         */
+
+    }, {
+        key: 'modify',
+        value: function modify() {
+            var _this = this;
+
+            for (var _len = arguments.length, modifiers = Array(_len), _key = 0; _key < _len; _key++) {
+                modifiers[_key] = arguments[_key];
+            }
+
+            var classes = modifiers.map(function (mod) {
+                return _this.name + _util.modifierSeparator + mod;
+            });
+            return this.each(function (el) {
+                var _el$classList;
+
+                return (_el$classList = el.classList).add.apply(_el$classList, _toConsumableArray(classes));
+            });
+        }
+
+        /**
+         * Remove one or more modifiers from the
+         * currently selected elements
+         *
+         * @param {...String} modifiers
+         * @return {BEM}
+         * @api public
+         */
+
+    }, {
+        key: 'unmodify',
+        value: function unmodify() {
+            var _this2 = this;
+
+            for (var _len2 = arguments.length, modifiers = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+                modifiers[_key2] = arguments[_key2];
+            }
+
+            var classes = modifiers.map(function (mod) {
+                return _this2.name + _util.modifierSeparator + mod;
+            });
+            return this.each(function (el) {
+                var _el$classList2;
+
+                return (_el$classList2 = el.classList).remove.apply(_el$classList2, _toConsumableArray(classes));
+            });
+        }
+
+        /**
+         * Toggle adding/removing one or more modifiers
+         * to the currently selected elements
+         *
+         * @param {...String} modifiers
+         * @return {BEM}
+         * @api public
+         */
+
+    }, {
+        key: 'toggle',
+        value: function toggle() {
+            var _this3 = this;
+
+            for (var _len3 = arguments.length, modifiers = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+                modifiers[_key3] = arguments[_key3];
+            }
+
+            return this.each(function (el) {
+                modifiers.forEach(function (mod) {
+                    el.classList.toggle(_this3.name + _util.modifierSeparator + mod);
+                });
+            });
+        }
+
+        /**
+         * Check if the first element of the
+         * currently selected elements has one or
+         * more modifiers
+         *
+         * @param {...String} modifiers
+         * @return {Boolean}
+         * @api public
+         */
+
+    }, {
+        key: 'is',
+        value: function is() {
+            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+                modifiers[_key4] = arguments[_key4];
+            }
+
+            return _util.hasModifiers.apply(undefined, [this[0], this.name].concat(modifiers));
+        }
+    }]);
+
+    return Element;
+}();
+
+exports.default = Element;
+module.exports = exports['default'];
+
+},{"./util":43}],43:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.isArrayLike = isArrayLike;
+exports.hasModifiers = hasModifiers;
+exports.push = push;
+/**
  * Common variables
  */
-var elementSeparator = '__';
-var modifierSeparator = '--';
+var elementSeparator = exports.elementSeparator = '__';
+var modifierSeparator = exports.modifierSeparator = '--';
 
 /**
  * Does an object have the characteristics
@@ -8110,7 +8404,7 @@ function hasModifiers(el, name) {
  * indexed properties to emulate an array
  *
  * @param {BEM} bem
- * @param {Element} elements
+ * @param {...Element} elements
  * @api private
  */
 function push(bem, elements) {
@@ -8121,214 +8415,7 @@ function push(bem, elements) {
     bem.length = len;
 }
 
-/**
- * Helper class for maninuplating elements
- * according to the BEM (Block Element Modifier)
- * methodology
- *
- * @class BEM
- * @api public
- */
-
-var BEM = function () {
-
-    /**
-     * Instantiate the class providing either a
-     * selector string, DOM element, or array-like
-     *
-     * @constructor
-     * @param {String|Element|ArrayLike} selector
-     * @param {Element} context (optional)
-     * @param {String} name (optional)
-     * @api private
-     */
-    function BEM(selector) {
-        var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-        var name = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-        _classCallCheck(this, BEM);
-
-        if (selector.nodeType) {
-            push(this, [selector]);
-        } else if (isArrayLike(selector)) {
-            push(this, selector);
-        } else {
-            push(this, context.querySelectorAll(selector));
-        }
-        this.name = name || this[0].className.split(' ')[0];
-    }
-
-    /**
-     * Invoke the passed function for each element
-     * in the collection
-     *
-     * @param {Function} fn
-     * @return {BEM}
-     * @api public
-     */
-
-
-    _createClass(BEM, [{
-        key: 'each',
-        value: function each(fn) {
-            for (var i = 0, len = this.length; i < len; i++) {
-                var el = this[i];
-                fn.call(el, el, i, this);
-            }
-            return this;
-        }
-
-        /**
-         * Find BEM block-elements that are decendants
-         * of the currently selected elements
-         *
-         * @param {String} name
-         * @param {...String} modifiers
-         * @return {BEM}
-         * @api public
-         */
-
-    }, {
-        key: 'element',
-        value: function element(name) {
-            for (var _len2 = arguments.length, modifiers = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                modifiers[_key2 - 1] = arguments[_key2];
-            }
-
-            name = this.name + elementSeparator + name;
-            var elements = [];
-            this.each(function (el) {
-                return elements.push.apply(elements, el.getElementsByClassName(name));
-            });
-            if (modifiers.length) {
-                elements = elements.filter(function (el) {
-                    return hasModifiers.apply(undefined, [el, name].concat(modifiers));
-                });
-            }
-            return new BEM(elements, null, name);
-        }
-
-        /**
-         * Add one or more modifiers to the
-         * currently selected elements
-         *
-         * @param {...String} modifiers
-         * @return {BEM}
-         * @api public
-         */
-
-    }, {
-        key: 'modify',
-        value: function modify() {
-            var _this = this;
-
-            for (var _len3 = arguments.length, modifiers = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-                modifiers[_key3] = arguments[_key3];
-            }
-
-            var classes = modifiers.map(function (mod) {
-                return _this.name + modifierSeparator + mod;
-            });
-            return this.each(function (el) {
-                var _el$classList;
-
-                return (_el$classList = el.classList).add.apply(_el$classList, _toConsumableArray(classes));
-            });
-        }
-
-        /**
-         * Remove one or more modifiers from the
-         * currently selected elements
-         *
-         * @param {...String} modifiers
-         * @return {BEM}
-         * @api public
-         */
-
-    }, {
-        key: 'unmodify',
-        value: function unmodify() {
-            var _this2 = this;
-
-            for (var _len4 = arguments.length, modifiers = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-                modifiers[_key4] = arguments[_key4];
-            }
-
-            var classes = modifiers.map(function (mod) {
-                return _this2.name + modifierSeparator + mod;
-            });
-            return this.each(function (el) {
-                var _el$classList2;
-
-                return (_el$classList2 = el.classList).remove.apply(_el$classList2, _toConsumableArray(classes));
-            });
-        }
-
-        /**
-         * Toggle adding/removing one or more modifiers
-         * to the currently selected elements
-         *
-         * @param {...String} modifiers
-         * @return {BEM}
-         * @api public
-         */
-
-    }, {
-        key: 'toggle',
-        value: function toggle() {
-            var _this3 = this;
-
-            for (var _len5 = arguments.length, modifiers = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-                modifiers[_key5] = arguments[_key5];
-            }
-
-            return this.each(function (el) {
-                modifiers.forEach(function (mod) {
-                    el.classList.toggle(_this3.name + modifierSeparator + mod);
-                });
-            });
-        }
-
-        /**
-         * Check if the first element of the
-         * currently selected elements has one or
-         * more modifiers
-         *
-         * @param {...String} modifiers
-         * @return {Boolean}
-         * @api public
-         */
-
-    }, {
-        key: 'is',
-        value: function is() {
-            for (var _len6 = arguments.length, modifiers = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-                modifiers[_key6] = arguments[_key6];
-            }
-
-            return hasModifiers.apply(undefined, [this[0], this.name].concat(modifiers));
-        }
-    }]);
-
-    return BEM;
-}();
-
-/**
- * Export the `bem` function
- *
- * @param {String|Element|ArrayLike} selector
- * @param {Element} context (optional)
- * @return {BEM}
- * @api public
- */
-
-
-function bem(selector, context) {
-    return new BEM(selector, context);
-}
-module.exports = exports['default'];
-
-},{}],41:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 var _chai = require('chai');
@@ -8488,4 +8575,4 @@ describe('bem', function () {
     });
 });
 
-},{"../../src/bem":40,"chai":4}]},{},[41]);
+},{"../../src/bem":40,"chai":4}]},{},[44]);
