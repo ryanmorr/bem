@@ -1,8 +1,8 @@
 /**
- * Define the separators used in BEM syntax
+ * Common variables
  */
-export const elementSeparator = '__';
-export const modifierSeparator = '--';
+const elementSeparator = '__';
+const modifierSeparator = '--';
 
 /**
  * Check if an element has one or
@@ -16,7 +16,7 @@ export const modifierSeparator = '--';
  */
 export function hasModifiers(el, name, ...modifiers) {
     return modifiers.every((modifier) => {
-        return el.classList.contains(name + modifierSeparator + modifier);
+        return el.classList.contains(getModifierName(name, modifier));
     });
 }
 
@@ -35,4 +35,40 @@ export function push(bem, elements) {
         bem[i] = elements[i];
     }
     bem.length = len;
+}
+
+/**
+ * Get the BEM block name from an
+ * element
+ *
+ * @param {Element} el
+ * @return {String}
+ * @api private
+ */
+export function getBlockName(el) {
+    return el.className.split(' ')[0];
+}
+
+/**
+ * Get the BEM block-element name
+ *
+ * @param {String} block
+ * @param {String} element
+ * @return {String}
+ * @api private
+ */
+export function getElementName(block, element) {
+    return block + elementSeparator + element;
+}
+
+/**
+ * Get the BEM modifier name
+ *
+ * @param {String} element
+ * @param {String} modifier
+ * @return {String}
+ * @api private
+ */
+export function getModifierName(element, modifier) {
+    return element + modifierSeparator + modifier;
 }

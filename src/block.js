@@ -2,7 +2,7 @@
  * Import dependencies
  */
 import BEMElement from './element';
-import { elementSeparator, hasModifiers } from './util';
+import { hasModifiers, getBlockName, getElementName } from './util';
 
 /**
  * BEM block class
@@ -22,20 +22,20 @@ export default class BEMBlock extends BEMElement {
      * @api private
      */
     constructor(elements) {
-        super(elements, elements[0].className.split(' ')[0]);
+        super(elements, getBlockName(elements[0]));
     }
 
     /**
      * Find BEM block-elements that are decendants
      * of the collection of block elements
      *
-     * @param {String} name
+     * @param {String} elementName
      * @param {...String} modifiers
      * @return {BEMElement}
      * @api public
      */
-    element(name, ...modifiers) {
-        name = this.name + elementSeparator + name;
+    element(elementName, ...modifiers) {
+        const name = getElementName(this.name, elementName);
         let elements = [];
         this.each((el) => elements.push.apply(elements, el.getElementsByClassName(name)));
         if (modifiers.length) {

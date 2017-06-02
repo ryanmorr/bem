@@ -8140,14 +8140,14 @@ var BEMBlock = function (_BEMElement) {
     function BEMBlock(elements) {
         _classCallCheck(this, BEMBlock);
 
-        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, elements[0].className.split(' ')[0]));
+        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, (0, _util.getBlockName)(elements[0])));
     }
 
     /**
      * Find BEM block-elements that are decendants
      * of the collection of block elements
      *
-     * @param {String} name
+     * @param {String} elementName
      * @param {...String} modifiers
      * @return {BEMElement}
      * @api public
@@ -8156,12 +8156,12 @@ var BEMBlock = function (_BEMElement) {
 
     _createClass(BEMBlock, [{
         key: 'element',
-        value: function element(name) {
+        value: function element(elementName) {
             for (var _len = arguments.length, modifiers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
                 modifiers[_key - 1] = arguments[_key];
             }
 
-            name = this.name + _util.elementSeparator + name;
+            var name = (0, _util.getElementName)(this.name, elementName);
             var elements = [];
             this.each(function (el) {
                 return elements.push.apply(elements, el.getElementsByClassName(name));
@@ -8218,10 +8218,10 @@ var BEMElement = function () {
      * @param {String} name
      * @api private
      */
-    function BEMElement(element, name) {
+    function BEMElement(elements, name) {
         _classCallCheck(this, BEMElement);
 
-        (0, _util.push)(this, element);
+        (0, _util.push)(this, elements);
         this.name = name;
     }
 
@@ -8263,8 +8263,8 @@ var BEMElement = function () {
                 modifiers[_key] = arguments[_key];
             }
 
-            var classes = modifiers.map(function (mod) {
-                return _this.name + _util.modifierSeparator + mod;
+            var classes = modifiers.map(function (modifier) {
+                return (0, _util.getModifierName)(_this.name, modifier);
             });
             return this.each(function (el) {
                 var _el$classList;
@@ -8291,8 +8291,8 @@ var BEMElement = function () {
                 modifiers[_key2] = arguments[_key2];
             }
 
-            var classes = modifiers.map(function (mod) {
-                return _this2.name + _util.modifierSeparator + mod;
+            var classes = modifiers.map(function (modifier) {
+                return (0, _util.getModifierName)(_this2.name, modifier);
             });
             return this.each(function (el) {
                 var _el$classList2;
@@ -8320,8 +8320,8 @@ var BEMElement = function () {
             }
 
             return this.each(function (el) {
-                modifiers.forEach(function (mod) {
-                    el.classList.toggle(_this3.name + _util.modifierSeparator + mod);
+                modifiers.forEach(function (modifier) {
+                    el.classList.toggle((0, _util.getModifierName)(_this3.name, modifier));
                 });
             });
         }
@@ -8360,11 +8360,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.hasModifiers = hasModifiers;
 exports.push = push;
+exports.getBlockName = getBlockName;
+exports.getElementName = getElementName;
+exports.getModifierName = getModifierName;
 /**
- * Define the separators used in BEM syntax
+ * Common variables
  */
-var elementSeparator = exports.elementSeparator = '__';
-var modifierSeparator = exports.modifierSeparator = '--';
+var elementSeparator = '__';
+var modifierSeparator = '--';
 
 /**
  * Check if an element has one or
@@ -8382,7 +8385,7 @@ function hasModifiers(el, name) {
     }
 
     return modifiers.every(function (modifier) {
-        return el.classList.contains(name + modifierSeparator + modifier);
+        return el.classList.contains(getModifierName(name, modifier));
     });
 }
 
@@ -8401,6 +8404,42 @@ function push(bem, elements) {
         bem[i] = elements[i];
     }
     bem.length = len;
+}
+
+/**
+ * Get the BEM block name from an
+ * element
+ *
+ * @param {Element} el
+ * @return {String}
+ * @api private
+ */
+function getBlockName(el) {
+    return el.className.split(' ')[0];
+}
+
+/**
+ * Get the BEM block-element name
+ *
+ * @param {String} block
+ * @param {String} element
+ * @return {String}
+ * @api private
+ */
+function getElementName(block, element) {
+    return block + elementSeparator + element;
+}
+
+/**
+ * Get the BEM modifier name
+ *
+ * @param {String} element
+ * @param {String} modifier
+ * @return {String}
+ * @api private
+ */
+function getModifierName(element, modifier) {
+    return element + modifierSeparator + modifier;
 }
 
 },{}],44:[function(require,module,exports){

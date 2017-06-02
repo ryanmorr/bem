@@ -1,7 +1,7 @@
 /**
  * Import dependencies
  */
-import { modifierSeparator, push, hasModifiers } from './util';
+import { push, hasModifiers, getModifierName } from './util';
 
 /**
  * Top-level class for maninuplating elements
@@ -22,8 +22,8 @@ export default class BEMElement {
      * @param {String} name
      * @api private
      */
-    constructor(element, name) {
-        push(this, element);
+    constructor(elements, name) {
+        push(this, elements);
         this.name = name;
     }
 
@@ -52,7 +52,7 @@ export default class BEMElement {
      * @api public
      */
     modify(...modifiers) {
-        const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
+        const classes = modifiers.map((modifier) => getModifierName(this.name, modifier));
         return this.each((el) => el.classList.add(...classes));
     }
 
@@ -65,7 +65,7 @@ export default class BEMElement {
      * @api public
      */
     unmodify(...modifiers) {
-        const classes = modifiers.map((mod) => this.name + modifierSeparator + mod);
+        const classes = modifiers.map((modifier) => getModifierName(this.name, modifier));
         return this.each((el) => el.classList.remove(...classes));
     }
 
@@ -79,8 +79,8 @@ export default class BEMElement {
      */
     toggle(...modifiers) {
         return this.each((el) => {
-            modifiers.forEach((mod) => {
-                el.classList.toggle(this.name + modifierSeparator + mod);
+            modifiers.forEach((modifier) => {
+                el.classList.toggle(getModifierName(this.name, modifier));
             });
         });
     }
