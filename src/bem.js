@@ -1,10 +1,13 @@
 /**
  * Import dependencies
  */
-import Block from './block';
+import BEMBlock from './block';
 
 /**
- * Export the `bem` function
+ * Provide a CSS selector string, DOM
+ * element, or nodelist/array and get
+ * a `BEMBlock` instance to traverse and
+ * manipulate the component
  *
  * @param {String|Element} blocks
  * @param {Element} context (optional)
@@ -19,5 +22,5 @@ export default function bem(selector, context = document) {
     if (selector.nodeType) {
         elements = [selector];
     }
-    return new Block(elements);
+    return new BEMBlock(elements);
 }

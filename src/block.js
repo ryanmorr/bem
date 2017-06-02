@@ -1,17 +1,17 @@
 /**
  * Import dependencies
  */
-import Element from './element';
+import BEMElement from './element';
 import { elementSeparator, hasModifiers } from './util';
 
 /**
  * BEM block class
  *
- * @class Block
- * @extends Element
+ * @class BEMBlock
+ * @extends BEMElement
  * @api public
  */
-export default class Block extends Element {
+export default class BEMBlock extends BEMElement {
 
     /**
      * Instantiate the class with a collection
@@ -27,11 +27,11 @@ export default class Block extends Element {
 
     /**
      * Find BEM block-elements that are decendants
-     * of the currently selected elements
+     * of the collection of block elements
      *
      * @param {String} name
      * @param {...String} modifiers
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
     element(name, ...modifiers) {
@@ -41,6 +41,6 @@ export default class Block extends Element {
         if (modifiers.length) {
             elements = elements.filter((el) => hasModifiers(el, name, ...modifiers));
         }
-        return new Element(elements, name);
+        return new BEMElement(elements, name);
     }
 }

@@ -8,17 +8,18 @@ import { modifierSeparator, push, hasModifiers } from './util';
  * according to the BEM (Block Element Modifier)
  * methodology
  *
- * @class Element
+ * @class BEMElement
  * @api public
  */
-export default class Element {
+export default class BEMElement {
 
     /**
      * Instantiate the class with a collection
-     * of elements and the BEM class name
+     * of BEM elements and the BEM class name
      *
      * @constructor
      * @param {ArrayLike} elements
+     * @param {String} name
      * @api private
      */
     constructor(element, name) {
@@ -31,7 +32,7 @@ export default class Element {
      * in the collection
      *
      * @param {Function} fn
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
     each(fn) {
@@ -44,10 +45,10 @@ export default class Element {
 
     /**
      * Add one or more modifiers to the
-     * currently selected elements
+     * collection of BEM elements
      *
      * @param {...String} modifiers
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
     modify(...modifiers) {
@@ -57,10 +58,10 @@ export default class Element {
 
     /**
      * Remove one or more modifiers from the
-     * currently selected elements
+     * collection of BEM elements
      *
      * @param {...String} modifiers
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
     unmodify(...modifiers) {
@@ -70,10 +71,10 @@ export default class Element {
 
     /**
      * Toggle adding/removing one or more modifiers
-     * to the currently selected elements
+     * to the collection of BEM elements
      *
      * @param {...String} modifiers
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
     toggle(...modifiers) {
@@ -85,9 +86,8 @@ export default class Element {
     }
 
     /**
-     * Check if the first element of the
-     * currently selected elements has one or
-     * more modifiers
+     * Check if the first BEM element in the
+     * collection has one or more modifiers
      *
      * @param {...String} modifiers
      * @return {Boolean}

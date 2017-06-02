@@ -8067,7 +8067,10 @@ var _block2 = _interopRequireDefault(_block);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Export the `bem` function
+ * Provide a CSS selector string, DOM
+ * element, or nodelist/array and get
+ * a `BEMBlock` instance to traverse and
+ * manipulate the component
  *
  * @param {String|Element} blocks
  * @param {Element} context (optional)
@@ -8119,12 +8122,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * BEM block class
  *
- * @class Block
- * @extends Element
+ * @class BEMBlock
+ * @extends BEMElement
  * @api public
  */
-var Block = function (_Element) {
-    _inherits(Block, _Element);
+var BEMBlock = function (_BEMElement) {
+    _inherits(BEMBlock, _BEMElement);
 
     /**
      * Instantiate the class with a collection
@@ -8134,24 +8137,24 @@ var Block = function (_Element) {
      * @param {ArrayLike} elements
      * @api private
      */
-    function Block(elements) {
-        _classCallCheck(this, Block);
+    function BEMBlock(elements) {
+        _classCallCheck(this, BEMBlock);
 
-        return _possibleConstructorReturn(this, (Block.__proto__ || Object.getPrototypeOf(Block)).call(this, elements, elements[0].className.split(' ')[0]));
+        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, elements[0].className.split(' ')[0]));
     }
 
     /**
      * Find BEM block-elements that are decendants
-     * of the currently selected elements
+     * of the collection of block elements
      *
      * @param {String} name
      * @param {...String} modifiers
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
 
 
-    _createClass(Block, [{
+    _createClass(BEMBlock, [{
         key: 'element',
         value: function element(name) {
             for (var _len = arguments.length, modifiers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -8172,10 +8175,10 @@ var Block = function (_Element) {
         }
     }]);
 
-    return Block;
+    return BEMBlock;
 }(_element2.default);
 
-exports.default = Block;
+exports.default = BEMBlock;
 module.exports = exports['default'];
 
 },{"./element":42,"./util":43}],42:[function(require,module,exports){
@@ -8201,21 +8204,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * according to the BEM (Block Element Modifier)
  * methodology
  *
- * @class Element
+ * @class BEMElement
  * @api public
  */
-var Element = function () {
+var BEMElement = function () {
 
     /**
      * Instantiate the class with a collection
-     * of elements and the BEM class name
+     * of BEM elements and the BEM class name
      *
      * @constructor
      * @param {ArrayLike} elements
+     * @param {String} name
      * @api private
      */
-    function Element(element, name) {
-        _classCallCheck(this, Element);
+    function BEMElement(element, name) {
+        _classCallCheck(this, BEMElement);
 
         (0, _util.push)(this, element);
         this.name = name;
@@ -8226,12 +8230,12 @@ var Element = function () {
      * in the collection
      *
      * @param {Function} fn
-     * @return {BEM}
+     * @return {BEMElement}
      * @api public
      */
 
 
-    _createClass(Element, [{
+    _createClass(BEMElement, [{
         key: 'each',
         value: function each(fn) {
             for (var i = 0, len = this.length; i < len; i++) {
@@ -8243,10 +8247,10 @@ var Element = function () {
 
         /**
          * Add one or more modifiers to the
-         * currently selected elements
+         * collection of BEM elements
          *
          * @param {...String} modifiers
-         * @return {BEM}
+         * @return {BEMElement}
          * @api public
          */
 
@@ -8271,10 +8275,10 @@ var Element = function () {
 
         /**
          * Remove one or more modifiers from the
-         * currently selected elements
+         * collection of BEM elements
          *
          * @param {...String} modifiers
-         * @return {BEM}
+         * @return {BEMElement}
          * @api public
          */
 
@@ -8299,10 +8303,10 @@ var Element = function () {
 
         /**
          * Toggle adding/removing one or more modifiers
-         * to the currently selected elements
+         * to the collection of BEM elements
          *
          * @param {...String} modifiers
-         * @return {BEM}
+         * @return {BEMElement}
          * @api public
          */
 
@@ -8323,9 +8327,8 @@ var Element = function () {
         }
 
         /**
-         * Check if the first element of the
-         * currently selected elements has one or
-         * more modifiers
+         * Check if the first BEM element in the
+         * collection has one or more modifiers
          *
          * @param {...String} modifiers
          * @return {Boolean}
@@ -8343,10 +8346,10 @@ var Element = function () {
         }
     }]);
 
-    return Element;
+    return BEMElement;
 }();
 
-exports.default = Element;
+exports.default = BEMElement;
 module.exports = exports['default'];
 
 },{"./util":43}],43:[function(require,module,exports){
@@ -8358,16 +8361,18 @@ Object.defineProperty(exports, "__esModule", {
 exports.hasModifiers = hasModifiers;
 exports.push = push;
 /**
- * Common variables
+ * Define the separators used in BEM syntax
  */
 var elementSeparator = exports.elementSeparator = '__';
 var modifierSeparator = exports.modifierSeparator = '--';
 
 /**
- * Check is an element has one or
+ * Check if an element has one or
  * more modifiers
  *
  * @param {Element} el
+ * @param {String} name
+ * @param {...String} modifiers
  * @return {String}
  * @api private
  */
@@ -8382,11 +8387,12 @@ function hasModifiers(el, name) {
 }
 
 /**
- * Add elements to a `BEM` isntance as
- * indexed properties to emulate an array
+ * Add elements to a `BEMBlock` or
+ * `BEMElement` isntance as indexed
+ * properties to emulate an array
  *
- * @param {BEM} bem
- * @param {...Element} elements
+ * @param {BEMBlock|BEMElement} bem
+ * @param {ArrayLike} elements
  * @api private
  */
 function push(bem, elements) {
