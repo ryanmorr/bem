@@ -2,7 +2,6 @@
  * Import dependencies
  */
 import Block from './block';
-import { isArrayLike } from './util';
 
 /**
  * Export the `bem` function
@@ -13,11 +12,12 @@ import { isArrayLike } from './util';
  * @api public
  */
 export default function bem(selector, context = document) {
+    let elements = selector;
+    if (typeof selector === 'string') {
+        elements = context.querySelectorAll(selector);
+    }
     if (selector.nodeType) {
-        selector = [selector];
+        elements = [selector];
     }
-    if (isArrayLike(selector)) {
-        return new Block(selector);
-    }
-    return new Block(context.querySelectorAll(selector));
+    return new Block(elements);
 }

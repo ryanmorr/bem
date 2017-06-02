@@ -8064,8 +8064,6 @@ var _block = require('./block');
 
 var _block2 = _interopRequireDefault(_block);
 
-var _util = require('./util');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -8076,23 +8074,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @return {BEM}
  * @api public
  */
-/**
- * Import dependencies
- */
 function bem(selector) {
     var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
 
+    var elements = selector;
+    if (typeof selector === 'string') {
+        elements = context.querySelectorAll(selector);
+    }
     if (selector.nodeType) {
-        selector = [selector];
+        elements = [selector];
     }
-    if ((0, _util.isArrayLike)(selector)) {
-        return new _block2.default(selector);
-    }
-    return new _block2.default(context.querySelectorAll(selector));
-}
+    return new _block2.default(elements);
+} /**
+   * Import dependencies
+   */
 module.exports = exports['default'];
 
-},{"./block":41,"./util":43}],41:[function(require,module,exports){
+},{"./block":41}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8357,10 +8355,6 @@ module.exports = exports['default'];
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.isArrayLike = isArrayLike;
 exports.hasModifiers = hasModifiers;
 exports.push = push;
 /**
@@ -8368,18 +8362,6 @@ exports.push = push;
  */
 var elementSeparator = exports.elementSeparator = '__';
 var modifierSeparator = exports.modifierSeparator = '--';
-
-/**
- * Does an object have the characteristics
- * of an array-like object
- *
- * @param {*} obj
- * @return {Boolean}
- * @api private
- */
-function isArrayLike(obj) {
-    return obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && typeof obj.length === 'number' && obj.length >= 0 && obj.length % 1 === 0;
-}
 
 /**
  * Check is an element has one or

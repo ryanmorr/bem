@@ -5,22 +5,6 @@ export const elementSeparator = '__';
 export const modifierSeparator = '--';
 
 /**
- * Does an object have the characteristics
- * of an array-like object
- *
- * @param {*} obj
- * @return {Boolean}
- * @api private
- */
-export function isArrayLike(obj) {
-    return obj
-        && typeof obj === 'object'
-        && typeof obj.length === 'number'
-        && obj.length >= 0
-        && obj.length % 1 === 0;
-}
-
-/**
  * Check is an element has one or
  * more modifiers
  *
