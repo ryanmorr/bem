@@ -9,7 +9,7 @@ import BEMBlock from './block';
  * a `BEMBlock` instance to traverse and
  * manipulate the component
  *
- * @param {String|Element} blocks
+ * @param {String|Element|ArrayLike} blocks
  * @param {Element} context (optional)
  * @return {BEM}
  * @api public

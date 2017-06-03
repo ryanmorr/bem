@@ -8072,7 +8072,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * a `BEMBlock` instance to traverse and
  * manipulate the component
  *
- * @param {String|Element} blocks
+ * @param {String|Element|ArrayLike} blocks
  * @param {Element} context (optional)
  * @return {BEM}
  * @api public
@@ -8200,9 +8200,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * Top-level class for maninuplating elements
- * according to the BEM (Block Element Modifier)
- * methodology
+ * BEM element class
  *
  * @class BEMElement
  * @api public
@@ -8368,6 +8366,20 @@ exports.getModifierName = getModifierName;
  */
 var elementSeparator = '__';
 var modifierSeparator = '--';
+var blockNameRe = /^[a-zA-Z0-9-]+$/;
+
+/**
+ * Check if a class name is a valid
+ * BEM block name (letters, numbers,
+ * and single hyphens)
+ *
+ * @param {String} cls
+ * @return {Boolean}
+ * @api private
+ */
+function isValidBlockName(cls) {
+    return blockNameRe.test(cls) && cls.indexOf(elementSeparator) === -1 && cls.indexOf(modifierSeparator) === -1;
+}
 
 /**
  * Check if an element has one or
@@ -8415,7 +8427,12 @@ function push(bem, elements) {
  * @api private
  */
 function getBlockName(el) {
-    return el.className.split(' ')[0];
+    return el.className.split(' ').reduce(function (name, cls) {
+        if (name) {
+            return name;
+        }
+        return isValidBlockName(cls) ? cls : name;
+    }, null);
 }
 
 /**

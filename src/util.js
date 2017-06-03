@@ -3,6 +3,22 @@
  */
 const elementSeparator = '__';
 const modifierSeparator = '--';
+const blockNameRe = /^[a-zA-Z0-9-]+$/;
+
+/**
+ * Check if a class name is a valid
+ * BEM block name (letters, numbers,
+ * and single hyphens)
+ *
+ * @param {String} cls
+ * @return {Boolean}
+ * @api private
+ */
+function isValidBlockName(cls) {
+    return blockNameRe.test(cls)
+        && cls.indexOf(elementSeparator) === -1
+        && cls.indexOf(modifierSeparator) === -1;
+}
 
 /**
  * Check if an element has one or
@@ -46,7 +62,12 @@ export function push(bem, elements) {
  * @api private
  */
 export function getBlockName(el) {
-    return el.className.split(' ')[0];
+    return el.className.split(' ').reduce((name, cls) => {
+        if (name) {
+            return name;
+        }
+        return isValidBlockName(cls) ? cls : name;
+    }, null);
 }
 
 /**

@@ -4,9 +4,7 @@
 import { push, hasModifiers, getModifierName } from './util';
 
 /**
- * Top-level class for maninuplating elements
- * according to the BEM (Block Element Modifier)
- * methodology
+ * BEM element class
  *
  * @class BEMElement
  * @api public
