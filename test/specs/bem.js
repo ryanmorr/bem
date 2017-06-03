@@ -61,6 +61,12 @@ describe('bem', () => {
         expect(widget.name).to.equal('widget');
     });
 
+    it('should be able to explicity pass the BEM block name', () => {
+        const widget = bem('.widget', 'widget');
+
+        expect(widget.name).to.equal('widget');
+    });
+
     it('should be able to get one or more block-elements that are decendants of the collection of block elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');

@@ -8073,10 +8073,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * manipulate the component
  *
  * @param {String|Element|ArrayLike} blocks
+ * @param {Stirng} name (optional)
  * @return {BEM}
  * @api public
  */
 function bem(selector) {
+    var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
     var elements = selector;
     if (typeof selector === 'string') {
         elements = document.querySelectorAll(selector);
@@ -8084,7 +8087,7 @@ function bem(selector) {
     if (selector.nodeType) {
         elements = [selector];
     }
-    return new _block2.default(elements);
+    return new _block2.default(elements, name);
 } /**
    * Import dependencies
    */
@@ -8128,16 +8131,18 @@ var BEMBlock = function (_BEMElement) {
 
     /**
      * Instantiate the class with a collection
-     * of block level elements
+     * of block level elements and optionally
+     * the BEM block class name
      *
      * @constructor
      * @param {ArrayLike} elements
+     * @param {String} name (optional)
      * @api private
      */
-    function BEMBlock(elements) {
+    function BEMBlock(elements, name) {
         _classCallCheck(this, BEMBlock);
 
-        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, (0, _util.getBlockName)(elements[0])));
+        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, name || (0, _util.getBlockName)(elements[0])));
     }
 
     /**
@@ -8508,6 +8513,12 @@ describe('bem', function () {
 
     it('should extract the BEM block name from the first block element in the collection', function () {
         var widget = (0, _bem2.default)('.widget');
+
+        (0, _chai.expect)(widget.name).to.equal('widget');
+    });
+
+    it('should be able to explicity pass the BEM block name', function () {
+        var widget = (0, _bem2.default)('.widget', 'widget');
 
         (0, _chai.expect)(widget.name).to.equal('widget');
     });

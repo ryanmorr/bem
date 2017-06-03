@@ -15,14 +15,16 @@ export default class BEMBlock extends BEMElement {
 
     /**
      * Instantiate the class with a collection
-     * of block level elements
+     * of block level elements and optionally
+     * the BEM block class name
      *
      * @constructor
      * @param {ArrayLike} elements
+     * @param {String} name (optional)
      * @api private
      */
-    constructor(elements) {
-        super(elements, getBlockName(elements[0]));
+    constructor(elements, name) {
+        super(elements, name || getBlockName(elements[0]));
     }
 
     /**
