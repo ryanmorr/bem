@@ -17,6 +17,9 @@ import BEMBlock from './block';
 export default function bem(selector, context = document) {
     let elements = selector;
     if (typeof selector === 'string') {
+        if (typeof context === 'string') {
+            context = document.querySelector(context);
+        }
         elements = context.querySelectorAll(selector);
     }
     if (selector.nodeType) {

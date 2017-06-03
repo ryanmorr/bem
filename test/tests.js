@@ -8082,6 +8082,9 @@ function bem(selector) {
 
     var elements = selector;
     if (typeof selector === 'string') {
+        if (typeof context === 'string') {
+            context = document.querySelector(context);
+        }
         elements = context.querySelectorAll(selector);
     }
     if (selector.nodeType) {
@@ -8509,8 +8512,17 @@ describe('bem', function () {
         (0, _chai.expect)(widget[0].id).to.equal('widget-1');
     });
 
-    it('should be able to pass an element as an optional second argument to use as context of selector query', function () {
+    it('should be able to pass an element as an optional second argument to use as the context of the query', function () {
         var cmp = (0, _bem2.default)('.component', document.querySelector('.widget'));
+
+        (0, _chai.expect)(cmp).to.have.lengthOf(3);
+        (0, _chai.expect)(cmp[0].id).to.equal('component-1');
+        (0, _chai.expect)(cmp[1].id).to.equal('component-2');
+        (0, _chai.expect)(cmp[2].id).to.equal('component-3');
+    });
+
+    it('should be able to pass a CSS selector string as an optional second argument to use as the context of thequery', function () {
+        var cmp = (0, _bem2.default)('.component', '.widget');
 
         (0, _chai.expect)(cmp).to.have.lengthOf(3);
         (0, _chai.expect)(cmp[0].id).to.equal('component-1');

@@ -55,8 +55,17 @@ describe('bem', () => {
         expect(widget[0].id).to.equal('widget-1');
     });
 
-    it('should be able to pass an element as an optional second argument to use as context of selector query', () => {
+    it('should be able to pass an element as an optional second argument to use as the context of the query', () => {
         const cmp = bem('.component', document.querySelector('.widget'));
+
+        expect(cmp).to.have.lengthOf(3);
+        expect(cmp[0].id).to.equal('component-1');
+        expect(cmp[1].id).to.equal('component-2');
+        expect(cmp[2].id).to.equal('component-3');
+    });
+
+    it('should be able to pass a CSS selector string as an optional second argument to use as the context of thequery', () => {
+        const cmp = bem('.component', '.widget');
 
         expect(cmp).to.have.lengthOf(3);
         expect(cmp[0].id).to.equal('component-1');
