@@ -61,10 +61,19 @@ describe('bem', () => {
         expect(widget.name).to.equal('widget');
     });
 
-    it('should be able to explicity pass the BEM block name', () => {
-        const widget = bem('.widget', 'widget');
+    it('should be able filter the query for blocks based on modifiers', () => {
+        const cmp1 = bem('.component', 'foo');
 
-        expect(widget.name).to.equal('widget');
+        expect(cmp1).to.have.lengthOf(3);
+        expect(cmp1[0].id).to.equal('component-1');
+        expect(cmp1[1].id).to.equal('component-2');
+        expect(cmp1[2].id).to.equal('component-3');
+
+        const cmp2 = bem('.component', 'foo', 'bar');
+
+        expect(cmp2).to.have.lengthOf(2);
+        expect(cmp2[0].id).to.equal('component-2');
+        expect(cmp2[1].id).to.equal('component-3');
     });
 
     it('should be able to get one or more block-elements that are decendants of the collection of block elements', () => {

@@ -10,11 +10,11 @@ import BEMBlock from './block';
  * manipulate the component
  *
  * @param {String|Element|ArrayLike} blocks
- * @param {Stirng} name (optional)
+ * @param {...String} modifiers
  * @return {BEM}
  * @api public
  */
-export default function bem(selector, name = null) {
+export default function bem(selector, ...modifiers) {
     let elements = selector;
     if (typeof selector === 'string') {
         elements = document.querySelectorAll(selector);
@@ -22,5 +22,5 @@ export default function bem(selector, name = null) {
     if (selector.nodeType) {
         elements = [selector];
     }
-    return new BEMBlock(elements, name);
+    return new BEMBlock(elements, ...modifiers);
 }

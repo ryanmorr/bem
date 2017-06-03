@@ -8073,13 +8073,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * manipulate the component
  *
  * @param {String|Element|ArrayLike} blocks
- * @param {Stirng} name (optional)
+ * @param {...String} modifiers
  * @return {BEM}
  * @api public
  */
 function bem(selector) {
-    var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
     var elements = selector;
     if (typeof selector === 'string') {
         elements = document.querySelectorAll(selector);
@@ -8087,7 +8085,12 @@ function bem(selector) {
     if (selector.nodeType) {
         elements = [selector];
     }
-    return new _block2.default(elements, name);
+
+    for (var _len = arguments.length, modifiers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        modifiers[_key - 1] = arguments[_key];
+    }
+
+    return new (Function.prototype.bind.apply(_block2.default, [null].concat([elements], modifiers)))();
 } /**
    * Import dependencies
    */
@@ -8136,13 +8139,23 @@ var BEMBlock = function (_BEMElement) {
      *
      * @constructor
      * @param {ArrayLike} elements
-     * @param {String} name (optional)
+     * @param {...String} modifiers
      * @api private
      */
-    function BEMBlock(elements, name) {
+    function BEMBlock(elements) {
+        for (var _len = arguments.length, modifiers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            modifiers[_key - 1] = arguments[_key];
+        }
+
         _classCallCheck(this, BEMBlock);
 
-        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, name || (0, _util.getBlockName)(elements[0])));
+        var name = (0, _util.getBlockName)(elements[0]);
+        if (modifiers.length) {
+            elements = (0, _util.toArray)(elements).filter(function (el) {
+                return _util.hasModifiers.apply(undefined, [el, name].concat(modifiers));
+            });
+        }
+        return _possibleConstructorReturn(this, (BEMBlock.__proto__ || Object.getPrototypeOf(BEMBlock)).call(this, elements, name));
     }
 
     /**
@@ -8159,8 +8172,8 @@ var BEMBlock = function (_BEMElement) {
     _createClass(BEMBlock, [{
         key: 'element',
         value: function element(elementName) {
-            for (var _len = arguments.length, modifiers = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                modifiers[_key - 1] = arguments[_key];
+            for (var _len2 = arguments.length, modifiers = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                modifiers[_key2 - 1] = arguments[_key2];
             }
 
             var name = (0, _util.getElementName)(this.name, elementName);
@@ -8358,6 +8371,7 @@ module.exports = exports['default'];
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.toArray = toArray;
 exports.hasModifiers = hasModifiers;
 exports.push = push;
 exports.getBlockName = getBlockName;
@@ -8366,6 +8380,7 @@ exports.getModifierName = getModifierName;
 /**
  * Common variables
  */
+var slice = [].slice;
 var elementSeparator = '__';
 var modifierSeparator = '--';
 var blockNameRe = /^[a-zA-Z0-9-]+$/;
@@ -8381,6 +8396,21 @@ var blockNameRe = /^[a-zA-Z0-9-]+$/;
  */
 function isValidBlockName(cls) {
     return blockNameRe.test(cls) && cls.indexOf(elementSeparator) === -1 && cls.indexOf(modifierSeparator) === -1;
+}
+
+/**
+ * Convert an array-like object to
+ * an array
+ *
+ * @param {ArrayLike} obj
+ * @return {Array}
+ * @api private
+ */
+function toArray(obj) {
+    if (Array.from) {
+        return Array.from(obj);
+    }
+    return slice.call(obj);
 }
 
 /**
@@ -8517,10 +8547,19 @@ describe('bem', function () {
         (0, _chai.expect)(widget.name).to.equal('widget');
     });
 
-    it('should be able to explicity pass the BEM block name', function () {
-        var widget = (0, _bem2.default)('.widget', 'widget');
+    it('should be able filter the query for blocks based on modifiers', function () {
+        var cmp1 = (0, _bem2.default)('.component', 'foo');
 
-        (0, _chai.expect)(widget.name).to.equal('widget');
+        (0, _chai.expect)(cmp1).to.have.lengthOf(3);
+        (0, _chai.expect)(cmp1[0].id).to.equal('component-1');
+        (0, _chai.expect)(cmp1[1].id).to.equal('component-2');
+        (0, _chai.expect)(cmp1[2].id).to.equal('component-3');
+
+        var cmp2 = (0, _bem2.default)('.component', 'foo', 'bar');
+
+        (0, _chai.expect)(cmp2).to.have.lengthOf(2);
+        (0, _chai.expect)(cmp2[0].id).to.equal('component-2');
+        (0, _chai.expect)(cmp2[1].id).to.equal('component-3');
     });
 
     it('should be able to get one or more block-elements that are decendants of the collection of block elements', function () {

@@ -2,7 +2,7 @@
  * Import dependencies
  */
 import BEMElement from './element';
-import { hasModifiers, getBlockName, getElementName } from './util';
+import { toArray, hasModifiers, getBlockName, getElementName } from './util';
 
 /**
  * BEM block class
@@ -20,11 +20,15 @@ export default class BEMBlock extends BEMElement {
      *
      * @constructor
      * @param {ArrayLike} elements
-     * @param {String} name (optional)
+     * @param {...String} modifiers
      * @api private
      */
-    constructor(elements, name) {
-        super(elements, name || getBlockName(elements[0]));
+    constructor(elements, ...modifiers) {
+        const name = getBlockName(elements[0]);
+        if (modifiers.length) {
+            elements = toArray(elements).filter((el) => hasModifiers(el, name, ...modifiers));
+        }
+        super(elements, name);
     }
 
     /**

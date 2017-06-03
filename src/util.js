@@ -1,6 +1,7 @@
 /**
  * Common variables
  */
+const slice = [].slice;
 const elementSeparator = '__';
 const modifierSeparator = '--';
 const blockNameRe = /^[a-zA-Z0-9-]+$/;
@@ -18,6 +19,21 @@ function isValidBlockName(cls) {
     return blockNameRe.test(cls)
         && cls.indexOf(elementSeparator) === -1
         && cls.indexOf(modifierSeparator) === -1;
+}
+
+/**
+ * Convert an array-like object to
+ * an array
+ *
+ * @param {ArrayLike} obj
+ * @return {Array}
+ * @api private
+ */
+export function toArray(obj) {
+    if (Array.from) {
+        return Array.from(obj);
+    }
+    return slice.call(obj);
 }
 
 /**
