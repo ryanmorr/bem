@@ -20,23 +20,16 @@ describe('bem', () => {
             <div id="widget-1" class="widget">
                 <div class="widget__header"></div>
                 <div class="widget__body">
-                    <div id="tabs-1" class="tabs"></div>
-                    <div class="widget__item"></div>
-                    <div class="widget__item"></div>
-                    <div class="widget__item"></div>
+                    <div id="component-1" class="component component--foo">
+                        <div id="element-1" class="component__element component__element--foo component__element--bar"></div>
+                        <div id="element-2" class="component__element component__element--foo"></div>
+                        <div id="element-3" class="component__element component__element--foo component__element--bar"></div>
+                    </div>
+
+                    <div id="component-2" class="component component--foo component--bar"></div>
+                    <div id="component-3" class="component component--foo component--bar"></div>
                 </div>
                 <div class="widget__footer"></div>
-            </div>
-
-            <div class="wrapper">
-                <div id="component-1" class="component component--foo">
-                    <div id="element-1" class="component__element component__element--foo component__element--bar"></div>
-                    <div id="element-2" class="component__element component__element--foo"></div>
-                    <div id="element-3" class="component__element component__element--foo component__element--bar"></div>
-                </div>
-
-                <div id="component-2" class="component component--foo component--bar"></div>
-                <div id="component-3" class="component component--foo component--bar"></div>
             </div>
         `;
     });
@@ -62,13 +55,22 @@ describe('bem', () => {
         expect(widget[0].id).to.equal('widget-1');
     });
 
-    it('should extract the BEM block/element name from selected element(s)', () => {
+    it('should be able to pass an element as an optional second argument to use as context of selector query', () => {
+        const cmp = bem('.component', document.querySelector('.widget'));
+
+        expect(cmp).to.have.lengthOf(3);
+        expect(cmp[0].id).to.equal('component-1');
+        expect(cmp[1].id).to.equal('component-2');
+        expect(cmp[2].id).to.equal('component-3');
+    });
+
+    it('should extract the BEM block name from the first block element in the collection', () => {
         const widget = bem('.widget');
 
         expect(widget.name).to.equal('widget');
     });
 
-    it('should be able to get one or more block-elements that are decendants of the currently selected elements', () => {
+    it('should be able to get one or more block-elements that are decendants of the collection of block elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
@@ -92,7 +94,7 @@ describe('bem', () => {
         expect(el2[1].id).to.equal('element-3');
     });
 
-    it('should be able to iterate through the currently selected elements', () => {
+    it('should be able to iterate the collection of block-elemnts', () => {
         const widget = bem('.widget');
         const items = widget.element('item');
         const expected = document.querySelectorAll('.widget__item');
@@ -102,7 +104,7 @@ describe('bem', () => {
         });
     });
 
-    it('should be able to add one or more modifiers to the currently selected elements', () => {
+    it('should be able to add one or more modifiers to the collection of elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
@@ -113,7 +115,7 @@ describe('bem', () => {
         expect(header[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
     });
 
-    it('should be able to remove one or more modifiers from the currently selected elements', () => {
+    it('should be able to remove one or more modifiers from the collection of elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
@@ -127,7 +129,7 @@ describe('bem', () => {
         expect(header[0].className).to.equal('widget__header');
     });
 
-    it('should be able to toggle adding/removing one or more modifiers from the currently selected elements', () => {
+    it('should be able to toggle adding/removing one or more modifiers from the collection of elements', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 
@@ -144,7 +146,7 @@ describe('bem', () => {
         expect(header[0].className).to.equal('widget__header widget__header--baz');
     });
 
-    it('should be able to determine if an element has one or more modifiers', () => {
+    it('should be able to determine if the first element in the collection has one or more modifiers', () => {
         const widget = bem('.widget');
         const header = widget.element('header');
 

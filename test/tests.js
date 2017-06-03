@@ -8485,7 +8485,7 @@ describe('bem', function () {
     });
 
     beforeEach(function () {
-        container.innerHTML = '\n            <div id="widget-1" class="widget">\n                <div class="widget__header"></div>\n                <div class="widget__body">\n                    <div id="tabs-1" class="tabs"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                    <div class="widget__item"></div>\n                </div>\n                <div class="widget__footer"></div>\n            </div>\n\n            <div class="wrapper">\n                <div id="component-1" class="component component--foo">\n                    <div id="element-1" class="component__element component__element--foo component__element--bar"></div>\n                    <div id="element-2" class="component__element component__element--foo"></div>\n                    <div id="element-3" class="component__element component__element--foo component__element--bar"></div>\n                </div>\n\n                <div id="component-2" class="component component--foo component--bar"></div>\n                <div id="component-3" class="component component--foo component--bar"></div>\n            </div>\n        ';
+        container.innerHTML = '\n            <div id="widget-1" class="widget">\n                <div class="widget__header"></div>\n                <div class="widget__body">\n                    <div id="component-1" class="component component--foo">\n                        <div id="element-1" class="component__element component__element--foo component__element--bar"></div>\n                        <div id="element-2" class="component__element component__element--foo"></div>\n                        <div id="element-3" class="component__element component__element--foo component__element--bar"></div>\n                    </div>\n\n                    <div id="component-2" class="component component--foo component--bar"></div>\n                    <div id="component-3" class="component component--foo component--bar"></div>\n                </div>\n                <div class="widget__footer"></div>\n            </div>\n        ';
     });
 
     it('should be able to get a BEM block by CSS selector', function () {
@@ -8509,13 +8509,22 @@ describe('bem', function () {
         (0, _chai.expect)(widget[0].id).to.equal('widget-1');
     });
 
-    it('should extract the BEM block/element name from selected element(s)', function () {
+    it('should be able to pass an element as an optional second argument to use as context of selector query', function () {
+        var cmp = (0, _bem2.default)('.component', document.querySelector('.widget'));
+
+        (0, _chai.expect)(cmp).to.have.lengthOf(3);
+        (0, _chai.expect)(cmp[0].id).to.equal('component-1');
+        (0, _chai.expect)(cmp[1].id).to.equal('component-2');
+        (0, _chai.expect)(cmp[2].id).to.equal('component-3');
+    });
+
+    it('should extract the BEM block name from the first block element in the collection', function () {
         var widget = (0, _bem2.default)('.widget');
 
         (0, _chai.expect)(widget.name).to.equal('widget');
     });
 
-    it('should be able to get one or more block-elements that are decendants of the currently selected elements', function () {
+    it('should be able to get one or more block-elements that are decendants of the collection of block elements', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
@@ -8539,7 +8548,7 @@ describe('bem', function () {
         (0, _chai.expect)(el2[1].id).to.equal('element-3');
     });
 
-    it('should be able to iterate through the currently selected elements', function () {
+    it('should be able to iterate the collection of block-elemnts', function () {
         var widget = (0, _bem2.default)('.widget');
         var items = widget.element('item');
         var expected = document.querySelectorAll('.widget__item');
@@ -8549,7 +8558,7 @@ describe('bem', function () {
         });
     });
 
-    it('should be able to add one or more modifiers to the currently selected elements', function () {
+    it('should be able to add one or more modifiers to the collection of elements', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
@@ -8560,7 +8569,7 @@ describe('bem', function () {
         (0, _chai.expect)(header[0].className).to.equal('widget__header widget__header--bar widget__header--baz');
     });
 
-    it('should be able to remove one or more modifiers from the currently selected elements', function () {
+    it('should be able to remove one or more modifiers from the collection of elements', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
@@ -8574,7 +8583,7 @@ describe('bem', function () {
         (0, _chai.expect)(header[0].className).to.equal('widget__header');
     });
 
-    it('should be able to toggle adding/removing one or more modifiers from the currently selected elements', function () {
+    it('should be able to toggle adding/removing one or more modifiers from the collection of elements', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
@@ -8591,7 +8600,7 @@ describe('bem', function () {
         (0, _chai.expect)(header[0].className).to.equal('widget__header widget__header--baz');
     });
 
-    it('should be able to determine if an element has one or more modifiers', function () {
+    it('should be able to determine if the first element in the collection has one or more modifiers', function () {
         var widget = (0, _bem2.default)('.widget');
         var header = widget.element('header');
 
