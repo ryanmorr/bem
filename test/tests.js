@@ -8073,19 +8073,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * manipulate the component
  *
  * @param {String|Element|ArrayLike} blocks
- * @param {Element} context (optional)
  * @return {BEM}
  * @api public
  */
 function bem(selector) {
-    var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-
     var elements = selector;
     if (typeof selector === 'string') {
-        if (typeof context === 'string') {
-            context = document.querySelector(context);
-        }
-        elements = context.querySelectorAll(selector);
+        elements = document.querySelectorAll(selector);
     }
     if (selector.nodeType) {
         elements = [selector];
@@ -8510,24 +8504,6 @@ describe('bem', function () {
 
         (0, _chai.expect)(widget).to.have.lengthOf(1);
         (0, _chai.expect)(widget[0].id).to.equal('widget-1');
-    });
-
-    it('should be able to pass an element as an optional second argument to use as the context of the query', function () {
-        var cmp = (0, _bem2.default)('.component', document.querySelector('.widget'));
-
-        (0, _chai.expect)(cmp).to.have.lengthOf(3);
-        (0, _chai.expect)(cmp[0].id).to.equal('component-1');
-        (0, _chai.expect)(cmp[1].id).to.equal('component-2');
-        (0, _chai.expect)(cmp[2].id).to.equal('component-3');
-    });
-
-    it('should be able to pass a CSS selector string as an optional second argument to use as the context of thequery', function () {
-        var cmp = (0, _bem2.default)('.component', '.widget');
-
-        (0, _chai.expect)(cmp).to.have.lengthOf(3);
-        (0, _chai.expect)(cmp[0].id).to.equal('component-1');
-        (0, _chai.expect)(cmp[1].id).to.equal('component-2');
-        (0, _chai.expect)(cmp[2].id).to.equal('component-3');
     });
 
     it('should extract the BEM block name from the first block element in the collection', function () {

@@ -10,17 +10,13 @@ import BEMBlock from './block';
  * manipulate the component
  *
  * @param {String|Element|ArrayLike} blocks
- * @param {Element} context (optional)
  * @return {BEM}
  * @api public
  */
-export default function bem(selector, context = document) {
+export default function bem(selector) {
     let elements = selector;
     if (typeof selector === 'string') {
-        if (typeof context === 'string') {
-            context = document.querySelector(context);
-        }
-        elements = context.querySelectorAll(selector);
+        elements = document.querySelectorAll(selector);
     }
     if (selector.nodeType) {
         elements = [selector];
