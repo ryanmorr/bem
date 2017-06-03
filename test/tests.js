@@ -8383,7 +8383,7 @@ exports.getModifierName = getModifierName;
 var slice = [].slice;
 var elementSeparator = '__';
 var modifierSeparator = '--';
-var blockNameRe = /^[a-zA-Z0-9-]+$/;
+var blockNameRe = /^[\w-]+$/;
 
 /**
  * Check if a class name is a valid
@@ -8542,9 +8542,28 @@ describe('bem', function () {
     });
 
     it('should extract the BEM block name from the first block element in the collection', function () {
-        var widget = (0, _bem2.default)('.widget');
+        var el = document.createElement('div');
 
-        (0, _chai.expect)(widget.name).to.equal('widget');
+        el.className = 'foo';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
+
+        el.className = 'foo-bar';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo-bar');
+
+        el.className = 'foo_bar';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo_bar');
+
+        el.className = 'foo-123';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo-123');
+
+        el.className = 'foo--bar foo';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
+
+        el.className = 'foo__bar foo';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
+
+        el.className = 'foo--bar foo';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
     });
 
     it('should be able filter the query for blocks based on modifiers', function () {

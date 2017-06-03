@@ -4,7 +4,7 @@
 const slice = [].slice;
 const elementSeparator = '__';
 const modifierSeparator = '--';
-const blockNameRe = /^[a-zA-Z0-9-]+$/;
+const blockNameRe = /^[\w-]+$/;
 
 /**
  * Check if a class name is a valid

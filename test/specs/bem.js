@@ -56,9 +56,28 @@ describe('bem', () => {
     });
 
     it('should extract the BEM block name from the first block element in the collection', () => {
-        const widget = bem('.widget');
+        const el = document.createElement('div');
 
-        expect(widget.name).to.equal('widget');
+        el.className = 'foo';
+        expect(bem(el).name).to.equal('foo');
+
+        el.className = 'foo-bar';
+        expect(bem(el).name).to.equal('foo-bar');
+
+        el.className = 'foo_bar';
+        expect(bem(el).name).to.equal('foo_bar');
+
+        el.className = 'foo-123';
+        expect(bem(el).name).to.equal('foo-123');
+
+        el.className = 'foo--bar foo';
+        expect(bem(el).name).to.equal('foo');
+
+        el.className = 'foo__bar foo';
+        expect(bem(el).name).to.equal('foo');
+
+        el.className = 'foo--bar foo';
+        expect(bem(el).name).to.equal('foo');
     });
 
     it('should be able filter the query for blocks based on modifiers', () => {
