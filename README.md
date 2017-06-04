@@ -1,5 +1,11 @@
 # bem
 
+[![Version Badge][version-image]][project-url]
+[![Build Status][build-image]][build-url]
+[![Dependencies][dependencies-image]][project-url]
+[![License][license-image]][license-url]
+[![File Size][file-size-image]][project-url]
+
 > Simple jQuery-like library to traverse and modify components according to the BEM methodology
 
 ## Usage
@@ -175,3 +181,12 @@ gulp test
 ## License
 
 This project is dedicated to the public domain as described by the [Unlicense](http://unlicense.org/).
+
+[project-url]: https://github.com/ryanmorr/bem
+[version-image]: https://badge.fury.io/gh/ryanmorr%2Fbem.svg
+[build-url]: https://travis-ci.org/ryanmorr/bem
+[build-image]: https://travis-ci.org/ryanmorr/bem.svg
+[dependencies-image]: https://david-dm.org/ryanmorr/bem.svg
+[license-image]: https://img.shields.io/badge/license-Unlicense-blue.svg
+[license-url]: UNLICENSE
+[file-size-image]: https://badge-size.herokuapp.com/ryanmorr/bem/master/dist/bem.min.js.svg?color=blue&label=file%20size
