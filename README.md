@@ -4,21 +4,25 @@
 
 ## Usage
 
-Begin by passing a CSS selector string to get one or more block-level elements:
+Begin by querying for one or more block-level elements:
 
 ``` javascript
+import bem from 'bem';
+
+// Query for a block via CSS selector string
 const component = bem('.component');
 
 // Like jQuery, bem can handle a single element or a collection internally
 component.length; //=> 2
 
-// Reference elements like you would in jQuery
+// Reference single elements like you would in jQuery
 component[0]; //=> DOM element
 ```
 
 Query for element-level nodes of a block:
 
 ``` javascript
+// Provide the root element name (no need to prefix with the block name)
 const menuItems = bem('.component').element('menu-item');
 
 // bem resolves class names internally according to the BEM methodology
