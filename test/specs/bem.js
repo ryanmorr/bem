@@ -64,8 +64,14 @@ describe('bem', () => {
         el.className = 'foo-bar';
         expect(bem(el).name).to.equal('foo-bar');
 
+        el.className = 'foo-bar-baz-qux';
+        expect(bem(el).name).to.equal('foo-bar-baz-qux');
+
         el.className = 'foo_bar';
         expect(bem(el).name).to.equal('foo_bar');
+
+        el.className = 'foo_bar_baz_qux';
+        expect(bem(el).name).to.equal('foo_bar_baz_qux');
 
         el.className = 'foo-123';
         expect(bem(el).name).to.equal('foo-123');
@@ -74,9 +80,6 @@ describe('bem', () => {
         expect(bem(el).name).to.equal('foo');
 
         el.className = 'foo__bar foo';
-        expect(bem(el).name).to.equal('foo');
-
-        el.className = 'foo--bar foo';
         expect(bem(el).name).to.equal('foo');
     });
 

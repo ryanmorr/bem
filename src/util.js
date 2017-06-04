@@ -4,22 +4,7 @@
 const slice = [].slice;
 const elementSeparator = '__';
 const modifierSeparator = '--';
-const blockNameRe = /^[\w-]+$/;
-
-/**
- * Check if a class name is a valid
- * BEM block name (letters, numbers,
- * and single hyphens)
- *
- * @param {String} cls
- * @return {Boolean}
- * @api private
- */
-function isValidBlockName(cls) {
-    return blockNameRe.test(cls)
-        && cls.indexOf(elementSeparator) === -1
-        && cls.indexOf(modifierSeparator) === -1;
-}
+const blockNameRe = /^[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*$/;
 
 /**
  * Convert an array-like object to
@@ -82,7 +67,7 @@ export function getBlockName(el) {
         if (name) {
             return name;
         }
-        return isValidBlockName(cls) ? cls : name;
+        return blockNameRe.test(cls) ? cls : name;
     }, null);
 }
 

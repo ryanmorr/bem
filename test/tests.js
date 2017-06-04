@@ -8383,20 +8383,7 @@ exports.getModifierName = getModifierName;
 var slice = [].slice;
 var elementSeparator = '__';
 var modifierSeparator = '--';
-var blockNameRe = /^[\w-]+$/;
-
-/**
- * Check if a class name is a valid
- * BEM block name (letters, numbers,
- * and single hyphens)
- *
- * @param {String} cls
- * @return {Boolean}
- * @api private
- */
-function isValidBlockName(cls) {
-    return blockNameRe.test(cls) && cls.indexOf(elementSeparator) === -1 && cls.indexOf(modifierSeparator) === -1;
-}
+var blockNameRe = /^[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*$/;
 
 /**
  * Convert an array-like object to
@@ -8463,7 +8450,7 @@ function getBlockName(el) {
         if (name) {
             return name;
         }
-        return isValidBlockName(cls) ? cls : name;
+        return blockNameRe.test(cls) ? cls : name;
     }, null);
 }
 
@@ -8550,8 +8537,14 @@ describe('bem', function () {
         el.className = 'foo-bar';
         (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo-bar');
 
+        el.className = 'foo-bar-baz-qux';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo-bar-baz-qux');
+
         el.className = 'foo_bar';
         (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo_bar');
+
+        el.className = 'foo_bar_baz_qux';
+        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo_bar_baz_qux');
 
         el.className = 'foo-123';
         (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo-123');
@@ -8560,9 +8553,6 @@ describe('bem', function () {
         (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
 
         el.className = 'foo__bar foo';
-        (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
-
-        el.className = 'foo--bar foo';
         (0, _chai.expect)((0, _bem2.default)(el).name).to.equal('foo');
     });
 
