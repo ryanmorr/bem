@@ -69,7 +69,7 @@ const menuItem = bem('.component').element('menu-item', 'highlighted', 'active')
 
 ## API
 
-### bem(selector[, modifiers],...)
+### bem(selector[, ...modifiers])
 
 Create a new `bem` instance by querying for the block(s) or explicity providing them and optionally provide modifiers to filter the blocks:
 
@@ -87,7 +87,7 @@ const block = bem(document.querySelector('.block'));
 const block = bem('.block', 'foo', 'bar');
 ```
 
-### bem#element(name[, modifiers],...)
+### bem#element(name[, ...modifiers])
 
 Query for element-level nodes by providing the name and optionally provide modifiers to filter the elements. Returns a new `bem` instance for the currently selected elements:
 
@@ -99,7 +99,7 @@ const elements = bem('.block').element('element');
 const elements = bem('.block').element('element', 'foo', 'bar');
 ```
 
-### bem#modify(modifiers,...)
+### bem#modify(...modifiers)
 
 Add one or more modifiers to the currently selected elements. Returns the `bem` instance to support method chaining:
 
@@ -111,7 +111,7 @@ bem('.block').modify('foo');
 bem('.block').element('element').modify('foo', 'bar');
 ```
 
-### bem#unmodify(modifiers,...)
+### bem#unmodify(...modifiers)
 
 Remove one or more modifiers from the currently selected elements. Returns the `bem` instance to support method chaining:
 
@@ -123,7 +123,7 @@ bem('.block').unmodify('foo');
 bem('.block').element('element').unmodify('foo', 'bar');
 ```
 
-### bem#toggle(modifiers,...)
+### bem#toggle(...modifiers)
 
 Toggle adding/removing one or more modifiers to/from the currently selected elements. Returns the `bem` instance to support method chaining:
 
@@ -135,7 +135,7 @@ bem('.block').toggle('foo');
 bem('.block').element('element').toggle('foo', 'bar');
 ```
 
-### bem#is(modifiers,...)
+### bem#is(...modifiers)
 
 Returns true if the first element in a collection has one or more modifiers, otherwise it returns false:
 
