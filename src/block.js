@@ -16,7 +16,8 @@ export default class BEMBlock extends BEMElement {
     /**
      * Instantiate the class with a collection
      * of block level elements and optionally
-     * the BEM block class name
+     * one or more modifiers to filter the
+     * collection
      *
      * @constructor
      * @param {ArrayLike} elements
