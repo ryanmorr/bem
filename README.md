@@ -6,7 +6,7 @@
 
 > Simple jQuery-like library to traverse and modify components according to the BEM methodology
 
-## Installation
+## Install
 
 Download the [development](http://github.com/ryanmorr/bem/raw/master/dist/bem.js) or [minified](http://github.com/ryanmorr/bem/raw/master/dist/bem.min.js) version, or install via NPM:
 
