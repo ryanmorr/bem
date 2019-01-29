@@ -2,19 +2,23 @@
 
 [![Version Badge][version-image]][project-url]
 [![Build Status][build-image]][build-url]
-[![Dependencies][dependencies-image]][project-url]
 [![License][license-image]][license-url]
-[![File Size][file-size-image]][project-url]
 
 > Simple jQuery-like library to traverse and modify components according to the BEM methodology
+
+## Installation
+
+Download the [development](http://github.com/ryanmorr/bem/raw/master/dist/bem.js) or [minified](http://github.com/ryanmorr/bem/raw/master/dist/bem.min.js) version, or install via NPM:
+
+``` sh
+npm install @ryanmorr/bem
+```
 
 ## Usage
 
 Begin by querying for one or more block-level elements:
 
 ``` javascript
-import bem from 'bem';
-
 // Query for a block via CSS selector string
 const component = bem('.component');
 
@@ -29,32 +33,32 @@ Query for element-level nodes of a block:
 
 ``` javascript
 // Provide the root element name (no need to prefix with the block name)
-const menuItems = bem('.component').element('menu-item');
+const menuItems = bem('.menu').element('menu-item');
 
 // bem resolves class names internally according to the BEM methodology
-menuItems[0].className; //=> "component__menu-item"
+menuItems[0].className; //=> "menu__menu-item"
 ```
 
 Modify blocks/elements by adding and removing modifier classes:
 
 ``` javascript
-const component = bem('.component');
+const menu = bem('.menu');
 const menuItems = component.element('menu-item');
 
 // Add a modifier to a block
-component.modify('disabled'); //=> Adds "component--disabled" class to block(s)
+menu.modify('disabled'); //=> Adds "menu--disabled" class to block(s)
 
 // Add a modifier to an element
-menuItems.modify('highlighted'); //=> Adds "component__menu-item--highlighted" class to element(s)
+menuItems.modify('highlighted'); //=> Adds "menu__menu-item--highlighted" class to element(s)
 
 // Remove a modifier
-component.unmodify('color-red') //=> Removes "component--color-red" class from the block(s)
+menu.unmodify('color-red') //=> Removes "menu--color-red" class from the block(s)
 
 // Toggle a modifier
-component.toggle('hidden'); //=> Removes "component--hidden" class if it exits, otherwise, it adds it
+menu.toggle('hidden'); //=> Removes "menu--hidden" class if it exits, otherwise, it adds it
 
 // Check if a block/element has a modifier
-menuItems.is('active'); //=> Returns true if the "component__menu-item--active" class exists
+menuItems.is('active'); //=> Returns true if the "menu__menu-item--active" class exists
 ```
 
 Qualify a query by passing one or more modifiers:
@@ -64,12 +68,12 @@ Qualify a query by passing one or more modifiers:
 const component = bem('.component', 'disabled');
 
 // Find the active and highlighted menu item
-const menuItem = bem('.component').element('menu-item', 'highlighted', 'active');
+const menuItem = bem('.menu').element('menu-item', 'highlighted', 'active');
 ```
 
 ## API
 
-### bem(selector[, ...modifiers])
+### bem(selector, [...modifiers])
 
 Create a new `bem` instance by querying for the block(s) or explicity providing them and optionally provide modifiers to filter the blocks:
 
@@ -87,7 +91,7 @@ const block = bem(document.querySelector('.block'));
 const block = bem('.block', 'foo', 'bar');
 ```
 
-### bem#element(name[, ...modifiers])
+### bem#element(name, [...modifiers])
 
 Query for element-level nodes by providing the name and optionally provide modifiers to filter the elements. Returns a new `bem` instance for the currently selected elements:
 
@@ -158,26 +162,6 @@ bem('.block').element('element').each((el) => {
 });
 ```
 
-## Installation
-
-bem is [CommonJS](http://www.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) compatible with no dependencies. You can download the [development](http://github.com/ryanmorr/bem/raw/master/dist/bem.js) or [minified](http://github.com/ryanmorr/bem/raw/master/dist/bem.min.js) version, or install it in one of the following ways:
-
-``` sh
-npm install ryanmorr/bem
-
-bower install ryanmorr/bem
-```
-
-## Tests
-
-Open `test/runner.html` in your browser or test with PhantomJS by issuing the following commands:
-
-``` sh
-npm install
-npm install -g gulp
-gulp test
-```
-
 ## License
 
 This project is dedicated to the public domain as described by the [Unlicense](http://unlicense.org/).
@@ -186,7 +170,5 @@ This project is dedicated to the public domain as described by the [Unlicense](h
 [version-image]: https://badge.fury.io/gh/ryanmorr%2Fbem.svg
 [build-url]: https://travis-ci.org/ryanmorr/bem
 [build-image]: https://travis-ci.org/ryanmorr/bem.svg
-[dependencies-image]: https://david-dm.org/ryanmorr/bem.svg
 [license-image]: https://img.shields.io/badge/license-Unlicense-blue.svg
 [license-url]: UNLICENSE
-[file-size-image]: https://badge-size.herokuapp.com/ryanmorr/bem/master/dist/bem.min.js.svg?color=blue&label=file%20size
