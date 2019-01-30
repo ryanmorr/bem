@@ -1,25 +1,9 @@
 /**
  * Common variables
  */
-const slice = [].slice;
 const elementSeparator = '__';
 const modifierSeparator = '--';
 const blockNameRe = /^[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*$/;
-
-/**
- * Convert an array-like object to
- * an array
- *
- * @param {ArrayLike} obj
- * @return {Array}
- * @api private
- */
-export function toArray(obj) {
-    if (Array.from) {
-        return Array.from(obj);
-    }
-    return slice.call(obj);
-}
 
 /**
  * Check if an element has one or

@@ -2,7 +2,7 @@
  * Import dependencies
  */
 import BEMElement from './element';
-import { toArray, hasModifiers, getBlockName, getElementName } from './util';
+import { hasModifiers, getBlockName, getElementName } from './util';
 
 /**
  * BEM block class
@@ -27,7 +27,7 @@ export default class BEMBlock extends BEMElement {
     constructor(elements, ...modifiers) {
         const name = getBlockName(elements[0]);
         if (modifiers.length) {
-            elements = toArray(elements).filter((el) => hasModifiers(el, name, ...modifiers));
+            elements = Array.from(elements).filter((el) => hasModifiers(el, name, ...modifiers));
         }
         super(elements, name);
     }
