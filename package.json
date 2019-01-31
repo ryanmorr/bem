@@ -1,7 +1,7 @@
 {
   "name": "@ryanmorr/bem",
   "description": "Simple jQuery-like library to traverse and modify components according to the BEM methodology",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "Unlicense",
   "homepage": "https://github.com/ryanmorr/bem",
   "main": "dist/bem.min.js",
