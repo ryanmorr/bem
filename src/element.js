@@ -55,8 +55,10 @@ export default class BEMElement {
         return this.each((el) => {
             const elClasses = el.className.split(' ');
             const classes = modifiers.filter((modifier) => !elClasses.includes(modifier));
-            el.classList.add(...classes);
-            dispatchListeners(el, classes);
+            if (classes.length) {
+                el.classList.add(...classes);
+                dispatchListeners(el, classes);
+            }
         });
     }
 
@@ -69,8 +71,8 @@ export default class BEMElement {
      * @api public
      */
     unmodify(...modifiers) {
-        const classes = modifiers.map((modifier) => getModifierName(this.name, modifier));
-        return this.each((el) => el.classList.remove(...classes));
+        modifiers = modifiers.map((modifier) => getModifierName(this.name, modifier));
+        return this.each((el) => el.classList.remove(...modifiers));
     }
 
     /**
@@ -84,13 +86,15 @@ export default class BEMElement {
     toggle(...modifiers) {
         modifiers = modifiers.map((modifier) => getModifierName(this.name, modifier));
         return this.each((el) => {
-            const classes = [];
-            modifiers.forEach((modifier) => {
+            const classes = modifiers.reduce((acc, modifier) => {
                 if (el.classList.toggle(modifier)) {
-                    classes.push(modifier);
+                    acc.push(modifier);
                 }
-            });
-            dispatchListeners(el, classes);
+                return acc;
+            }, []);
+            if (classes.length) {
+                dispatchListeners(el, classes);
+            }
         });
     }
 
