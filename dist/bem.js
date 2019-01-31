@@ -1,5 +1,5 @@
-/*! @ryanmorr/bem v0.1.1 | https://github.com/ryanmorr/bem */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.ryanmorrbem = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+/*! @ryanmorr/bem v0.2.0 | https://github.com/ryanmorr/bem */
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.bem = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -113,7 +113,7 @@ function (_BEMElement) {
     var name = (0, _util.getBlockName)(elements[0]);
 
     if (modifiers.length) {
-      elements = (0, _util.toArray)(elements).filter(function (el) {
+      elements = Array.from(elements).filter(function (el) {
         return _util.hasModifiers.apply(void 0, [el, name].concat(modifiers));
       });
     }
@@ -160,13 +160,15 @@ function (_BEMElement) {
 exports.default = BEMBlock;
 module.exports = exports.default;
 
-},{"./element":3,"./util":4}],3:[function(require,module,exports){
+},{"./element":3,"./util":5}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _listener = require("./listener");
 
 var _util = require("./util");
 
@@ -246,13 +248,22 @@ function () {
         modifiers[_key] = arguments[_key];
       }
 
-      var classes = modifiers.map(function (modifier) {
+      modifiers = modifiers.map(function (modifier) {
         return (0, _util.getModifierName)(_this.name, modifier);
       });
       return this.each(function (el) {
-        var _el$classList;
+        var elClasses = el.className.split(' ');
+        var classes = modifiers.filter(function (modifier) {
+          return !elClasses.includes(modifier);
+        });
 
-        return (_el$classList = el.classList).add.apply(_el$classList, _toConsumableArray(classes));
+        if (classes.length) {
+          var _el$classList;
+
+          (_el$classList = el.classList).add.apply(_el$classList, _toConsumableArray(classes));
+
+          (0, _listener.dispatchListeners)(el, classes);
+        }
       });
     }
     /**
@@ -273,13 +284,13 @@ function () {
         modifiers[_key2] = arguments[_key2];
       }
 
-      var classes = modifiers.map(function (modifier) {
+      modifiers = modifiers.map(function (modifier) {
         return (0, _util.getModifierName)(_this2.name, modifier);
       });
       return this.each(function (el) {
         var _el$classList2;
 
-        return (_el$classList2 = el.classList).remove.apply(_el$classList2, _toConsumableArray(classes));
+        return (_el$classList2 = el.classList).remove.apply(_el$classList2, _toConsumableArray(modifiers));
       });
     }
     /**
@@ -300,10 +311,21 @@ function () {
         modifiers[_key3] = arguments[_key3];
       }
 
+      modifiers = modifiers.map(function (modifier) {
+        return (0, _util.getModifierName)(_this3.name, modifier);
+      });
       return this.each(function (el) {
-        modifiers.forEach(function (modifier) {
-          el.classList.toggle((0, _util.getModifierName)(_this3.name, modifier));
-        });
+        var classes = modifiers.reduce(function (acc, modifier) {
+          if (el.classList.toggle(modifier)) {
+            acc.push(modifier);
+          }
+
+          return acc;
+        }, []);
+
+        if (classes.length) {
+          (0, _listener.dispatchListeners)(el, classes);
+        }
       });
     }
     /**
@@ -324,6 +346,35 @@ function () {
 
       return _util.hasModifiers.apply(void 0, [this[0], this.name].concat(modifiers));
     }
+    /**
+     * Add a listener to execute a callback
+     * function when one or more of the
+     * provided modifiers are added to an
+     * element in the collection
+     *
+     * @param {...String} modifiers
+     * @param {Function} callback
+     * @return {BEMElement}
+     * @api public
+     */
+
+  }, {
+    key: "on",
+    value: function on() {
+      var _this4 = this;
+
+      for (var _len5 = arguments.length, modifiers = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        modifiers[_key5] = arguments[_key5];
+      }
+
+      var callback = modifiers.pop();
+      var classes = modifiers.map(function (modifier) {
+        return (0, _util.getModifierName)(_this4.name, modifier);
+      });
+      return this.each(function (el) {
+        return (0, _listener.addListener)(el, classes, callback);
+      });
+    }
   }]);
 
   return BEMElement;
@@ -332,13 +383,84 @@ function () {
 exports.default = BEMElement;
 module.exports = exports.default;
 
-},{"./util":4}],4:[function(require,module,exports){
+},{"./listener":4,"./util":5}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.toArray = toArray;
+exports.addListener = addListener;
+exports.dispatchListeners = dispatchListeners;
+
+/**
+ * Common variables
+ */
+var listenersMap = new Map();
+/**
+ * Add a callback function to be invoked
+ * when the associated modifiers have been
+ * added to an element
+ *
+ * @param {Element} el
+ * @param {Array} modifiers
+ * @param {Function} callback
+ * @api private
+ */
+
+function addListener(el, modifiers, callback) {
+  var listeners = listenersMap.get(el);
+
+  if (listeners === undefined) {
+    listeners = [];
+    listenersMap.set(el, listeners);
+  }
+
+  listeners.push({
+    modifiers: modifiers,
+    callback: callback
+  });
+}
+/**
+ * Invoke the callback function if
+ * the associated modifiers have just
+ * been added
+ *
+ * @param {Element} el
+ * @param {Array} newModifiers
+ * @api private
+ */
+
+
+function dispatchListeners(el, newModifiers) {
+  var listeners = listenersMap.get(el);
+
+  if (listeners !== undefined) {
+    var classes = el.className.split(' ');
+    listeners.forEach(function (listener) {
+      var listenerModifiers = listener.modifiers;
+      var hasAll = listenerModifiers.every(function (mod) {
+        return classes.includes(mod);
+      });
+
+      if (hasAll) {
+        var hasAny = listenerModifiers.some(function (mod) {
+          return newModifiers.includes(mod);
+        });
+
+        if (hasAny) {
+          listener.callback.call(el, el);
+        }
+      }
+    });
+  }
+}
+
+},{}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.hasModifiers = hasModifiers;
 exports.push = push;
 exports.getBlockName = getBlockName;
@@ -348,26 +470,9 @@ exports.getModifierName = getModifierName;
 /**
  * Common variables
  */
-var slice = [].slice;
 var elementSeparator = '__';
 var modifierSeparator = '--';
 var blockNameRe = /^[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*$/;
-/**
- * Convert an array-like object to
- * an array
- *
- * @param {ArrayLike} obj
- * @return {Array}
- * @api private
- */
-
-function toArray(obj) {
-  if (Array.from) {
-    return Array.from(obj);
-  }
-
-  return slice.call(obj);
-}
 /**
  * Check if an element has one or
  * more modifiers
@@ -378,7 +483,6 @@ function toArray(obj) {
  * @return {String}
  * @api private
  */
-
 
 function hasModifiers(el, name) {
   for (var _len = arguments.length, modifiers = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
