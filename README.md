@@ -35,40 +35,27 @@ Query for element-level nodes of a block:
 // Provide the root element name (no need to prefix with the block name)
 const menuItems = bem('.menu').element('menu-item');
 
-// bem resolves class names internally according to the BEM methodology
+// Class names are resolved internally according to the BEM methodology
 menuItems[0].className; //=> "menu__menu-item"
 ```
 
 Modify blocks/elements by adding and removing modifier classes:
 
 ``` javascript
-const menu = bem('.menu');
-const menuItems = component.element('menu-item');
+// Add the "menu--disabled" modifier class to block(s)
+bem('.menu').modify('disabled'); 
 
-// Add a modifier to a block
-menu.modify('disabled'); //=> Adds "menu--disabled" class to block(s)
+// Add the "menu__menu-item--highlighted" modifier class to element(s)
+bem('.menu').element('menu-item').modify('highlighted'); 
 
-// Add a modifier to an element
-menuItems.modify('highlighted'); //=> Adds "menu__menu-item--highlighted" class to element(s)
+// Remove the "menu--color-red" modifier class from the block(s)
+bem('.menu').unmodify('color-red');
 
-// Remove a modifier
-menu.unmodify('color-red') //=> Removes "menu--color-red" class from the block(s)
+// Toggle adding/removing the "menu--hidden" modifier class
+bem('.menu').toggle('hidden'); 
 
-// Toggle a modifier
-menu.toggle('hidden'); //=> Removes "menu--hidden" class if it exits, otherwise, it adds it
-
-// Check if a block/element has a modifier
-menuItems.is('active'); //=> Returns true if the "menu__menu-item--active" class exists
-```
-
-Qualify a query by passing one or more modifiers:
-
-``` javascript
-// Find the disabled component
-const component = bem('.component', 'disabled');
-
-// Find the active and highlighted menu item
-const menuItem = bem('.menu').element('menu-item', 'highlighted', 'active');
+// Returns true if the element has the "menu__menu-item--active" modifier class
+bem('.menu').element('menu-item').is('active');
 ```
 
 ## API
@@ -147,8 +134,23 @@ Returns true if the first element in a collection has one or more modifiers, oth
 // Does the block have a modifier
 const isFoo = bem('.block').is('foo');
 
-// Do the elements have multiple modifiers
+// Does the element have multiple modifiers
 const isFooBar = bem('.block').element('element').is('foo', 'bar');
+```
+
+### bem#on(...modifiers, callback)
+
+Subscribe a callback function to be invoked when one or more modifiers have been added to a block/element. The callback function is passed the DOM element as the only argument. Returns the `bem` instance to support method chaining:
+
+```javascript
+bem('.block').on('foo', (el) => {
+    // Executed when the "block--foo" modifier class is added to the block/element
+});
+
+bem('.block').element('element').on('foo', 'bar', (el) => {
+     // Executed when the "block-element--foo" AND "block-element--bar"
+     // modifier classes have been added to the block/element
+});
 ```
 
 ### bem#each(fn)
