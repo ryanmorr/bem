@@ -1,6 +1,7 @@
 /**
  * Import dependencies
  */
+import { addListener, dispatchListeners } from './listener';
 import { push, hasModifiers, getModifierName } from './util';
 
 /**
@@ -50,8 +51,13 @@ export default class BEMElement {
      * @api public
      */
     modify(...modifiers) {
-        const classes = modifiers.map((modifier) => getModifierName(this.name, modifier));
-        return this.each((el) => el.classList.add(...classes));
+        modifiers = modifiers.map((modifier) => getModifierName(this.name, modifier));
+        return this.each((el) => {
+            const elClasses = el.className.split(' ');
+            const classes = modifiers.filter((modifier) => !elClasses.includes(modifier));
+            el.classList.add(...classes);
+            dispatchListeners(el, classes);
+        });
     }
 
     /**
@@ -76,10 +82,15 @@ export default class BEMElement {
      * @api public
      */
     toggle(...modifiers) {
+        modifiers = modifiers.map((modifier) => getModifierName(this.name, modifier));
         return this.each((el) => {
+            const classes = [];
             modifiers.forEach((modifier) => {
-                el.classList.toggle(getModifierName(this.name, modifier));
+                if (el.classList.toggle(modifier)) {
+                    classes.push(modifier);
+                }
             });
+            dispatchListeners(el, classes);
         });
     }
 
@@ -93,5 +104,22 @@ export default class BEMElement {
      */
     is(...modifiers) {
         return hasModifiers(this[0], this.name, ...modifiers);
+    }
+
+    /**
+     * Add a listener to execute a callback
+     * function when one or more of the
+     * provided modifiers are added to an
+     * element in the collection
+     *
+     * @param {...String} modifiers
+     * @param {Function} callback
+     * @return {BEMElement}
+     * @api public
+     */
+    on(...modifiers) {
+        const callback = modifiers.pop();
+        const classes = modifiers.map((modifier) => getModifierName(this.name, modifier));
+        return this.each((el) => addListener(el, classes, callback));
     }
 }

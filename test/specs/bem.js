@@ -194,10 +194,101 @@ describe('bem', () => {
         expect(header.is('bar')).to.equal(true);
     });
 
+    it('should support observing for changes of modifiers', () => {
+        const widget = bem('.widget');
+
+        const spy = sinon.spy(function onChange(el) {
+            expect(this).to.equal(widget[0]);
+            expect(el).to.equal(widget[0]);
+            expect(widget[0].className).to.equal('widget widget--foo');
+        });
+
+        widget.on('foo', spy);
+
+        widget.modify('foo');
+        expect(spy.called).to.equal(true);
+    });
+
+    it('should support observing for changes of multiple modifiers', () => {
+        const header = bem('.widget').element('header');
+
+        const spy = sinon.spy(function onChange(el) {
+            expect(this).to.equal(header[0]);
+            expect(el).to.equal(header[0]);
+            expect(header[0].className).to.equal('widget__header widget__header--foo widget__header--bar widget__header--baz');
+        });
+
+        header.on('foo', 'bar', 'baz', spy);
+
+        header.modify('foo');
+        expect(spy.called).to.equal(false);
+
+        header.modify('bar');
+        expect(spy.called).to.equal(false);
+
+        header.modify('baz');
+        expect(spy.called).to.equal(true);
+    });
+
+    it('should not dispatch listener if element already has modifiers', () => {
+        const widget = bem('.widget');
+
+        widget.modify('foo');
+
+        const spy = sinon.spy();
+        widget.on('foo', spy);
+
+        widget.modify('foo');
+        expect(spy.called).to.equal(false);
+    });
+
+    it('should support observing for changes of modifiers via the toggle method', () => {
+        const widget = bem('.widget');
+
+        const spy = sinon.spy();
+        widget.on('foo', spy);
+
+        widget.toggle('foo');
+        expect(spy.callCount).to.equal(1);
+
+        widget.toggle('foo');
+        expect(spy.callCount).to.equal(1);
+
+        widget.toggle('foo');
+        expect(spy.callCount).to.equal(2);
+    });
+
+    it('should support observing for changes of multiple modifiers via the toggle method', () => {
+        const widget = bem('.widget');
+
+        const spy = sinon.spy();
+        widget.on('foo', 'bar', 'baz', spy);
+
+        widget.toggle('foo');
+        expect(spy.callCount).to.equal(0);
+
+        widget.toggle('bar');
+        expect(spy.callCount).to.equal(0);
+
+        widget.toggle('baz');
+        expect(spy.callCount).to.equal(1);
+
+        widget.toggle('foo', 'baz');
+        expect(spy.callCount).to.equal(1);
+
+        widget.toggle('foo');
+        expect(spy.callCount).to.equal(1);
+
+        widget.toggle('baz');
+        expect(spy.callCount).to.equal(2);
+    });
+
     it('should support method chaining', () => {
         const widget = bem('.widget');
+
         expect(widget.modify('foo')).to.equal(widget);
         expect(widget.unmodify('foo')).to.equal(widget);
         expect(widget.toggle('foo')).to.equal(widget);
+        expect(widget.on('foo', () => {})).to.equal(widget);
     });
 });
