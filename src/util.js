@@ -3,9 +3,7 @@ const modifierSeparator = '--';
 const blockNameRe = /^[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*$/;
 
 export function hasModifiers(el, name, ...modifiers) {
-    return modifiers.every((modifier) => {
-        return el.classList.contains(getModifierName(name, modifier));
-    });
+    return modifiers.every((modifier) => el.classList.contains(getModifierName(name, modifier)));
 }
 
 export function push(bem, elements) {
@@ -17,12 +15,7 @@ export function push(bem, elements) {
 }
 
 export function getBlockName(el) {
-    return el.className.split(' ').reduce((name, cls) => {
-        if (name) {
-            return name;
-        }
-        return blockNameRe.test(cls) ? cls : name;
-    }, null);
+    return el.className.split(' ').find((cls) => blockNameRe.test(cls) && el.querySelector(`[class*="${cls + elementSeparator}"]`));
 }
 
 export function getElementName(block, element) {

@@ -54,30 +54,43 @@ describe('bem', () => {
 
     it('should extract the BEM block name from the first block element in the collection', () => {
         const el = document.createElement('div');
+        el.className = 'top-level';
+        document.body.appendChild(el);
 
-        el.className = 'foo';
-        expect(bem(el).name).to.equal('foo');
+        el.innerHTML = `
+            <section class="foo">
+                <span class="foo__bar"></span>
+            </section>
+        `;
+        expect(bem('.top-level .foo').name).to.equal('foo');
 
-        el.className = 'foo-bar';
-        expect(bem(el).name).to.equal('foo-bar');
+        el.innerHTML = `
+            <section class="foo-bar">
+                <span class="foo-bar__qux"></span>
+            </section>
+        `;
+        expect(bem('.top-level .foo-bar').name).to.equal('foo-bar');
 
-        el.className = 'foo-bar-baz-qux';
-        expect(bem(el).name).to.equal('foo-bar-baz-qux');
+        el.innerHTML = `
+            <section class="foo_bar">
+                <span class="foo_bar__qux"></span>
+            </section>
+        `;
+        expect(bem('.top-level .foo_bar').name).to.equal('foo_bar');
 
-        el.className = 'foo_bar';
-        expect(bem(el).name).to.equal('foo_bar');
+        el.innerHTML = `
+            <section class="a--b foo">
+                <span class="foo__qux"></span>
+            </section>
+        `;
+        expect(bem('.top-level .foo').name).to.equal('foo');
 
-        el.className = 'foo_bar_baz_qux';
-        expect(bem(el).name).to.equal('foo_bar_baz_qux');
-
-        el.className = 'foo-123';
-        expect(bem(el).name).to.equal('foo-123');
-
-        el.className = 'foo--bar foo';
-        expect(bem(el).name).to.equal('foo');
-
-        el.className = 'foo__bar foo';
-        expect(bem(el).name).to.equal('foo');
+        el.innerHTML = `
+            <section class="a__b foo">
+                <span class="foo__qux"></span>
+            </section>
+        `;
+        expect(bem('.top-level .foo').name).to.equal('foo');
     });
 
     it('should be able filter the query for blocks based on modifiers', () => {
@@ -103,7 +116,7 @@ describe('bem', () => {
         expect(header[0].className).to.equal('widget__header');
     });
 
-    it('should be able filter the query for blocks-elements based on modifiers', () => {
+    it('should be able filter the query for block-elements based on modifiers', () => {
         const cmp = bem('.component');
         const el1 = cmp.element('element', 'foo');
 
