@@ -19,6 +19,8 @@ npm install @ryanmorr/bem
 Begin by querying for one or more block-level elements:
 
 ``` javascript
+import bem from '@ryanmorr/bem';
+
 // Query for a block via CSS selector string
 const component = bem('.component');
 
