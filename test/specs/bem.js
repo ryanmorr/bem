@@ -1,6 +1,3 @@
-/* eslint-disable max-len */
-
-import { expect } from 'chai';
 import bem from '../../src/bem';
 
 describe('bem', () => {
