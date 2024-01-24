@@ -1,14 +1,14 @@
 # bem
 
 [![Version Badge][version-image]][project-url]
-[![Build Status][build-image]][build-url]
 [![License][license-image]][license-url]
+[![Build Status][build-image]][build-url]
 
 > Simple jQuery-like library to traverse and modify components according to the BEM methodology
 
 ## Install
 
-Download the [development](http://github.com/ryanmorr/bem/raw/master/dist/bem.js) or [minified](http://github.com/ryanmorr/bem/raw/master/dist/bem.min.js) version, or install via NPM:
+Download the [CJS](https://github.com/ryanmorr/bem/raw/master/dist/cjs/bem.js), [ESM](https://github.com/ryanmorr/bem/raw/master/dist/esm/bem.js), [UMD](https://github.com/ryanmorr/bem/raw/master/dist/umd/bem.js) versions or install via NPM:
 
 ``` sh
 npm install @ryanmorr/bem
@@ -32,7 +32,7 @@ component[0]; //=> DOM element
 Query for element-level nodes of a block:
 
 ``` javascript
-// Provide the root element name (no need to prefix with the block name)
+// Provide the root element name (you don't need to prefix with the block name)
 const menuItems = bem('.menu').element('menu-item');
 
 // Class names are resolved internally according to the BEM methodology
@@ -60,7 +60,7 @@ bem('.menu').element('menu-item').is('active');
 
 ## API
 
-### bem(selector, [...modifiers])
+### `bem(selector, ...modifiers?)`
 
 Create a new `bem` instance by querying for the block(s) or explicity providing them and optionally provide modifiers to filter the blocks:
 
@@ -78,7 +78,9 @@ const block = bem(document.querySelector('.block'));
 const block = bem('.block', 'foo', 'bar');
 ```
 
-### bem#element(name, [...modifiers])
+------
+
+### `element(name, ...modifiers?)`
 
 Query for element-level nodes by providing the name and optionally provide modifiers to filter the elements. Returns a new `bem` instance for the currently selected elements:
 
@@ -90,7 +92,9 @@ const elements = bem('.block').element('element');
 const elements = bem('.block').element('element', 'foo', 'bar');
 ```
 
-### bem#modify(...modifiers)
+------
+
+### `modify(...modifiers)`
 
 Add one or more modifiers to the currently selected elements. Returns the `bem` instance to support method chaining:
 
@@ -102,7 +106,9 @@ bem('.block').modify('foo');
 bem('.block').element('element').modify('foo', 'bar');
 ```
 
-### bem#unmodify(...modifiers)
+------
+
+### `unmodify(...modifiers)`
 
 Remove one or more modifiers from the currently selected elements. Returns the `bem` instance to support method chaining:
 
@@ -114,7 +120,9 @@ bem('.block').unmodify('foo');
 bem('.block').element('element').unmodify('foo', 'bar');
 ```
 
-### bem#toggle(...modifiers)
+------
+
+### `toggle(...modifiers)`
 
 Toggle adding/removing one or more modifiers to/from the currently selected elements. Returns the `bem` instance to support method chaining:
 
@@ -126,7 +134,9 @@ bem('.block').toggle('foo');
 bem('.block').element('element').toggle('foo', 'bar');
 ```
 
-### bem#is(...modifiers)
+------
+
+### `is(...modifiers)`
 
 Returns true if the first element in a collection has one or more modifiers, otherwise it returns false:
 
@@ -138,7 +148,9 @@ const isFoo = bem('.block').is('foo');
 const isFooBar = bem('.block').element('element').is('foo', 'bar');
 ```
 
-### bem#on(...modifiers, callback)
+------
+
+### `on(...modifiers, callback)`
 
 Subscribe a callback function to be invoked when one or more modifiers have been added to a block/element. The callback function is passed the DOM element as the only argument. Returns the `bem` instance to support method chaining:
 
@@ -148,12 +160,14 @@ bem('.block').on('foo', (el) => {
 });
 
 bem('.block').element('element').on('foo', 'bar', (el) => {
-     // Executed when the "block-element--foo" AND "block-element--bar"
+     // Executed when the "block__element--foo" AND "block__element--bar"
      // modifier classes have been added to the block/element
 });
 ```
 
-### bem#each(fn)
+------
+
+### `each(fn)`
 
 Iterate through each element in the collection:
 
@@ -169,8 +183,8 @@ bem('.block').element('element').each((el) => {
 This project is dedicated to the public domain as described by the [Unlicense](http://unlicense.org/).
 
 [project-url]: https://github.com/ryanmorr/bem
-[version-image]: https://badge.fury.io/gh/ryanmorr%2Fbem.svg
-[build-url]: https://travis-ci.org/ryanmorr/bem
-[build-image]: https://travis-ci.org/ryanmorr/bem.svg
-[license-image]: https://img.shields.io/badge/license-Unlicense-blue.svg
+[version-image]: https://img.shields.io/github/package-json/v/ryanmorr/bem?color=blue&style=flat-square
+[build-url]: https://github.com/ryanmorr/bem/actions
+[build-image]: https://img.shields.io/github/actions/workflow/status/ryanmorr/bem/node.js.yml?style=flat-square
+[license-image]: https://img.shields.io/github/license/ryanmorr/bem?color=blue&style=flat-square
 [license-url]: UNLICENSE
